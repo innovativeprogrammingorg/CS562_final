@@ -266,6 +266,23 @@ int64_t strpos(char * haystack, char * needle){
 	}
 	return -1;
 }
+
+int64_t count(char * haystack, char * needle){
+	size_t length = strlen(haystack);
+	size_t nlength = strlen(needle);
+	uint_fast64_t i;
+	if(length == 0||nlength>length){
+		return -1;
+	}
+	int64_t c = 0;
+	for(i = 0;i<=length-nlength;i++){
+		if(haystack[i]==needle[0] && strcompsub(needle,haystack,i,nlength)){
+			c++;
+		}
+	}
+	return c;
+}
+
 int indexOfChar(string haystack, char needle){
 	size_t length = haystack.size();
 

@@ -11,10 +11,25 @@
 #include "objects/sql.h"
 #include "objects/column.h"
 #include "objects/value.h"
+#include "objects/aggregate.h"
 
 
 using namespace std;
+
+string create_mf_structure(vector<string>* select_attribute,vector<Column*>* columns)
+string create_data_structure(vector<Column*>* columns);
+vector<Column*>* getColumns();
+vector<Aggregate*>* getAllAggregates(vector<string>* f_vect);
 void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<string>*,string);
+
+
+#ifndef TABLE
+#define TABLE "sales"
+#endif
+
+#ifndef DATABASE
+#define DATABASE "CS562"
+#endif
 
 #ifndef COLUMN_TYPE_QUERY
 #define COLUMN_TYPE_QUERY "SELECT * FROM `COLUMNS` WHERE `TABLE_NAME` = \'sales\' AND `TABLE_SCHEMA` = \'CS562\'"
@@ -28,11 +43,18 @@ void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<
 #define OUTPUT_FILE_HEADER_LOCATION "./result.h"
 #endif
  
-#ifndef OUTPUT_FILE_HEADER
-#define OUTPUT_FILE_HEADER "#ifndef _RESULT_H_\n" \
+#ifndef OUTPUT_FILE_HEADER_START
+#define OUTPUT_FILE_HEADER_START "#ifndef _RESULT_H_\n" \
 	"#define _RESULT_H_ \n" \
-	"#include <string>" 
+	"#include <string>\n" \
+	"#include <vector>\n" \
+	"#include <cstdint>\n" \
+	"#include \"lib/objects/sql.h\"" 
 
+#endif
+
+#ifndef OUTPUT_FILE_HEADER_END
+#define OUTPUT_FILE_HEADER_END "#endif"
 #endif
 
 

@@ -11,7 +11,10 @@
 
 using namespace std;
 
-
+/**
+ * An old string manipulation library I created for something else, 
+ * and can be used for this project.
+ */
 vector<string>* c_explode(char quan,string subject);
 vector<string>* explode(string quan,string subject);
 vector<string>* split(char quan,string subject);
@@ -27,6 +30,7 @@ char* concat(char * s1, char * s2, uint8_t mem);
 char* concat_all(int args,...);
 string itoa(int i);
 int64_t strpos(char * haystack, char * needle);
+int64_t count(char * haystack, char * needle);
 char* substring_f(char * subject,size_t index,size_t length);
 char* substr_f(char * subject,size_t index);
 char lastChar(char * str);

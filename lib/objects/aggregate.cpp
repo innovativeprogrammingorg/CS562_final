@@ -3,34 +3,50 @@
 using namespace std;
 
 
-Aggregate::Aggregate(Function f,Expression* e){
-
+Aggregate::Aggregate(string aggr){
+	vector<string>* data = c_explode('_',aggr);
+	if(data->length() == 3){
+		this->group = atoi(data->at(0).c_str());
+		this->func = data->at(1);
+		this->column = data->at(2);
+	}else{
+		this->group = 0;
+		this->func = data->at(0);
+		this->column = data->at(1);
+	}
+	
+	delete data;
 }
 
 Aggregate::~Aggregate(){
 
 }
 
-Value* Aggregate::calculate(vector<Value*> arg){
-
+string Aggregate::toESQL(){
+	string out = this->func + "(";
+	out.append(itoa(this->group));
+	out += "." + this->column + ")";
+	return out;
 }
 
-Value* Aggregate::sum(vector<Value*> arg){
-
+string Aggregate::toSQL(){
+	return this->func + "("+this->column ")";
 }
 
-Value* Aggregate::count(vector<Value*> arg){
-
+string Aggregate::toString(){
+	string out;
+	if(this->group != 0){
+		out.append(itoa(this->group));
+		out += "_";
+	}
+	out += this->funct + "_" + this->column;
+	return out;
 }
 
-Value* Aggregate::min(vector<Value*> arg){
-
+bool Aggregate::equals(string aggr){
+	return this->toString().compare(aggr) == 0;
 }
 
-Value* Aggregate::max(vector<Value*> arg){
-
-}
-
-Value* Aggregate::avg(vector<Value*> arg){
-
+bool Aggregate::isAggregate(string aggr){
+	return count(aggr.c_str(),"_") > 0;
 }

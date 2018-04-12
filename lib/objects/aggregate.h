@@ -3,29 +3,22 @@
 
 #include <string>
 #include <vector>
-
-enum Function = {
-	SQL_AVG,
-	SQL_COUNT,
-	SQL_MIN,
-	SQL_MAX,
-	SQL_SUM
-};
+#include <cstdlib>
+#include "../str.h";
+using namespace std;
 
 class Aggregate{
-	private:
-		Function func;
-		Expression* exp;
 	public:
-		Aggregate(Function f,Expression* e);
+		int group;
+		string func;
+		string column;
+		Aggregate(string aggr);
 		virtual ~Aggregate();
-		Value* calculate(vector<Value*> arg);
-	private:
-		Value* sum(vector<Value*> arg);
-		Value* count(vector<Value*> arg);
-		Value* min(vector<Value*> arg);
-		Value* max(vector<Value*> arg);
-		Value* avg(vector<Value*> arg);
+		string toESQL();
+		string toSQL();
+		string toString();
+		bool equals(string aggr);
+		static bool isAggregate(string aggr);
 };
 
 
