@@ -6,9 +6,9 @@
 #include "lib/objects/sql.h"
 struct mf_structure {
 	string cust;
-	int64_t sum_quant_1;
-	int64_t sum_quant_2;
-	int64_t sum_quant_3;
+	int64_t sum_quant;
+	int64_t sum_quant;
+	int64_t sum_quant;
 };
 struct sales{
 	string cust;
@@ -21,16 +21,16 @@ struct sales{
 };
 struct group3{
 	string cust;
-	int64_t sum_quant_1;
-	int64_t avg_quant_1;
+	int64_t sum_quant;
+	int64_t avg_quant;
 };
 struct group3{
 	string cust;
-	int64_t sum_quant_2;
+	int64_t sum_quant;
 };
 struct group3{
 	string cust;
-	int64_t sum_quant_3;
-	int64_t avg_quant_3;
+	int64_t sum_quant;
+	int64_t avg_quant;
 };
 #endif

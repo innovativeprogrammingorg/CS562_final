@@ -45,13 +45,7 @@ string Aggregate::toString(){
 
 string Aggregate::toVar(){
 	string out("");
-	out += this->func + "_" + this->column;
-	if(this->group != 0){
-		out += "_";
-		out.append(itoa(this->group));
-		
-	}
-	
+	out += this->func + "_" + this->column;	
 	return out;
 }
 
