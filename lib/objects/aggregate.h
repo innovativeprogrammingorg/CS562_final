@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include "../str.h";
+#include "../str.h"
+
 using namespace std;
 
 class Aggregate{
@@ -17,6 +18,7 @@ class Aggregate{
 		string toESQL();
 		string toSQL();
 		string toString();
+		string toVar();
 		bool equals(string aggr);
 		static bool isAggregate(string aggr);
 };

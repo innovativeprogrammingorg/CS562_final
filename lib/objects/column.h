@@ -3,7 +3,8 @@
 
 #include <string>
 
-enum CType = {
+using namespace std;
+enum SQLType {
 	SQL_CHAR,
 	SQL_VARCHAR,
 	SQL_TEXT,
@@ -26,6 +27,17 @@ enum CType = {
 	SQL_BOOL
 }; 
 
+enum CCppType{
+	CPP_STRING,
+	CPP_INT64,
+	CPP_FLOAT,
+	CPP_DOUBLE,
+	CPP_DATE,
+	CPP_RAW,
+	CPP_VECTOR
+};
+
+
 /**
  * For simplicity's sake, for the time being, the max size is not being included
  * This could be represented as a struct, but for simplicity, it is a class
@@ -33,7 +45,7 @@ enum CType = {
  * VARCHAR, CHAR, TEXT -> string
  * SET, ENUM -> vector
  * INT -> int64_t
- * UINT -> uint64_t
+ * UINT -> int64_t
  * FLOAT -> float
  * DOUBLE -> double
  * DECIMAL -> string
@@ -45,13 +57,16 @@ enum CType = {
  */
 class Column{
 	public:
-		CType type;
+		int type;
+		int ctype;
 		string name;
-		Column(string name,CType type);
+		Column(string name,int type);
 		Column(string name,string type);
+		static string getOutCppType(int type);
 	private:
-		static CType getType(string type);	
-}
+		static int getCppType(int type);
+		static int getType(string type);	
+};
 
 
 #endif

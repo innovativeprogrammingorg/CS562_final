@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "../str.h"
+#include "str.h"
 
 using namespace std;
 

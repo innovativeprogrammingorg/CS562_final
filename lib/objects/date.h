@@ -23,6 +23,6 @@ class Date{
 	private:
 		void extractDate(string date);
 		void extractTime(string time);
-}
+};
 
 #endif

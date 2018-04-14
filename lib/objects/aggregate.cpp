@@ -5,7 +5,7 @@ using namespace std;
 
 Aggregate::Aggregate(string aggr){
 	vector<string>* data = c_explode('_',aggr);
-	if(data->length() == 3){
+	if(data->size() == 3){
 		this->group = atoi(data->at(0).c_str());
 		this->func = data->at(1);
 		this->column = data->at(2);
@@ -30,7 +30,7 @@ string Aggregate::toESQL(){
 }
 
 string Aggregate::toSQL(){
-	return this->func + "("+this->column ")";
+	return this->func + "("+this->column + ")";
 }
 
 string Aggregate::toString(){
@@ -39,7 +39,19 @@ string Aggregate::toString(){
 		out.append(itoa(this->group));
 		out += "_";
 	}
-	out += this->funct + "_" + this->column;
+	out += this->func + "_" + this->column;
+	return out;
+}
+
+string Aggregate::toVar(){
+	string out("");
+	out += this->func + "_" + this->column;
+	if(this->group != 0){
+		out += "_";
+		out.append(itoa(this->group));
+		
+	}
+	
 	return out;
 }
 
@@ -48,5 +60,5 @@ bool Aggregate::equals(string aggr){
 }
 
 bool Aggregate::isAggregate(string aggr){
-	return count(aggr.c_str(),"_") > 0;
+	return count((char*)aggr.c_str(),"_") > 0;
 }

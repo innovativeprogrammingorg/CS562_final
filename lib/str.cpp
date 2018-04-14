@@ -206,6 +206,20 @@ uint_least8_t strcompsub(char * str1,char * str2, size_t index, size_t length){
 	return TRUE;
 }
 
+
+uint_least8_t strcompsub(string str1,string str2, size_t index, size_t length){
+	uint_fast64_t i;
+	if(length != str1.length()){
+		return FALSE;
+	}
+	for(i = index;i<length+index;i++){
+		if(str1[i-index] != str2[i]){
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 size_t strlength(char * str){
 	if(str == NULL){
 		return 0;
@@ -267,9 +281,9 @@ int64_t strpos(char * haystack, char * needle){
 	return -1;
 }
 
-int64_t count(char * haystack, char * needle){
-	size_t length = strlen(haystack);
-	size_t nlength = strlen(needle);
+int64_t count(string haystack, string needle){
+	size_t length = haystack.length();
+	size_t nlength = needle.length();
 	uint_fast64_t i;
 	if(length == 0||nlength>length){
 		return -1;

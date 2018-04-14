@@ -9,15 +9,13 @@
 #include "str.h"
 #include "io.h"
 #include "objects/sql.h"
+#include "structures.h"
+#include "query.h"
 #include "objects/column.h"
-#include "objects/value.h"
 #include "objects/aggregate.h"
 
 
 using namespace std;
-
-string create_mf_structure(vector<string>* select_attribute,vector<Column*>* columns)
-string create_data_structure(vector<Column*>* columns);
 vector<Column*>* getColumns();
 vector<Aggregate*>* getAllAggregates(vector<string>* f_vect);
 void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<string>*,string);
@@ -49,7 +47,7 @@ void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<
 	"#include <string>\n" \
 	"#include <vector>\n" \
 	"#include <cstdint>\n" \
-	"#include \"lib/objects/sql.h\"" 
+	"#include \"lib/objects/sql.h\"\n" 
 
 #endif
 

@@ -120,7 +120,7 @@ VType Value::getType(Value v1,Value v1){
 	return VDOUBLE;
 }
 
-string Value::getCppType(CType type){
+string Value::getCppType(SType type){
 	switch(type){
 		case SQL_CHAR:
 		case SQL_VARCHAR:
