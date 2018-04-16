@@ -37,6 +37,7 @@ vector<Aggregate*>* getSelectAggregates(vector<string>* select_attribute,vector<
 }
 
 
+
 void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 				 vector<string>* grouping_attr,vector<string>* f_vect,vector<string>* select_cond_vect,string having){
 	
@@ -47,7 +48,6 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	vector<Aggregate*>* all_aggregates = getAllAggregates(f_vect);
 	vector<string>* select_columns = new vector<string>();
 	vector<Aggregate*>* select_aggregates = getSelectAggregates(select_attribute,&select_columns);
-		
 
 	//Define the structures in the header
 	header += create_structures(select_attribute,columns);
@@ -56,8 +56,10 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	//Header is now finished
 	string program = 
 		"#include \"result.h\"\n"
-		"using namespace std;\n"
-		"int main(){\n"
+		"using namespace std;\n\n";
+	program += get_helpers(no_grouping_vars,select_columns,columns);
+
+	program += "int main(){\n"
 		"\tsql:ResultSet* res;\n"
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
@@ -68,5 +70,9 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	write_to_file("",OUTPUT_FILE_HEADER_LOCATION,header);
 	write_to_file("",OUTPUT_FILE,program);
 
+	delete columns;
+	delete all_aggregates;
+	delete select_columns;
+	delete select_aggregates;
 
 }

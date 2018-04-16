@@ -11,6 +11,7 @@
 #include "objects/sql.h"
 #include "structures.h"
 #include "query.h"
+#include "scan.h"
 #include "objects/column.h"
 #include "objects/aggregate.h"
 

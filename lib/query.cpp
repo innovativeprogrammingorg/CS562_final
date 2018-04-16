@@ -86,17 +86,17 @@ string data_retrieval(int no_grouping_vars,vector<Column*>* columns,vector<strin
 	out += "\");\n";
 	out += "\tvector<struct sales*>* data = new vector<struct sales*>();\n"
 		   "\twhile(res->next()){\n"
-				"\t\tstruct sales* entry = (struct sales*)calloc(1,sizeof(struct sales*));\n";
+				"\t\tstruct sales* entry = (struct sales*)calloc(1,sizeof(struct sales));\n";
 	for(vector<Column*>::iterator it = columns->begin();it!=columns->end();it++){
 		out += "\t\tentry->"+(*it)->name + " = res->"+get_sql_res_function((*it)->ctype)+"(\""+(*it)->name+"\");\n";
 	}
 	out += "\t\tdata->push_back(entry);\n"
 			"\t}\n"
-			"\t delete res;\n";
+			"\tdelete res;\n";
 
 	for(int i = 1;i<=no_grouping_vars;i++){
-		string datatype = "struct group"+itoa(i)+"*";
-		out += "\tvector<"+datatype+">* data";
+		string datatype = "struct group"+itoa(i);
+		out += "\tvector<"+datatype+"*>* data";
 		out.append(itoa(i));
 		out += " = new vector<"+datatype+">();\n";
 
@@ -105,7 +105,7 @@ string data_retrieval(int no_grouping_vars,vector<Column*>* columns,vector<strin
 		out += "\tres = conn->fetch(\""+construct_initial_query(i,select_columns,all_aggregates,grouping_attr,scv) + "\");\n"
 			   "\twhile(res->next()){\n";
 	    
-	    out += "\t\t" + datatype + " entry = ("+datatype+")calloc(1,sizeof("+datatype+"));\n";
+	    out += "\t\t" + datatype + "* entry = ("+datatype+"*)calloc(1,sizeof("+datatype+"));\n";
 
 	    for(vector<string>::iterator it = select_columns->begin();it!=select_columns->end();it++){
 			string name = *it;
@@ -133,7 +133,7 @@ string data_retrieval(int no_grouping_vars,vector<Column*>* columns,vector<strin
 			}
 			out += "\t\tentry->"+(*it)->toVar()+ " = res->"+get_sql_res_function(type)+"(\""+(*it)->toVar()+"\");\n";
 		}
-		out += "\t\tdata"+itoa(i)+"->push_back(entry);\n"
+		out += "\t\tgroup"+itoa(i)+"->push_back(entry);\n"
 				"\t};\n";
 		out += "\tdelete res;\n";
 	}
