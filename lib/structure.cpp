@@ -39,10 +39,10 @@ string create_structures(vector<string>* select_attribute,vector<Column*>* colum
 string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* all_aggregates){
 	string out("");
 	string avg_struct;
-	string groupers = "";
+	string key_groupers = "";
 	for(int i = 1;i<=no;i++){
 		out += "struct group"+itoa(i)+"{\n";
-		
+		string groupers;
 		for(auto it = select_columns->begin();it!=select_columns->end();it++){
 			string name = *it;
 			string type;
@@ -55,7 +55,8 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 			groupers += "\t"+type + " " + name +";\n";
 		}
 		out += groupers;
-		groupers = "";
+		key_groupers = groupers;
+		
 		for(auto it = all_aggregates->begin();it!=all_aggregates->end();it++){
 			if((*it)->group != i){
 				continue;
@@ -83,7 +84,7 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 	out += avg_struct;
 
 	out += "struct key{\n";
-	out += groupers;
+	out += key_groupers;
 	out += "};\n";
 	out += "struct keyComp {\n"
     "\tbool operator()(const std::string& a, const std::string& b) const {\n"

@@ -64,7 +64,7 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
 	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr);
-	//program += create_scans(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates);
+	program += create_scans(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates);
 	program += "\treturn 0;\n"
 				"}\n";
 	write_to_file("",OUTPUT_FILE_HEADER_LOCATION,header);

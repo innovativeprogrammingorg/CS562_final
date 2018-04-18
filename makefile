@@ -3,7 +3,7 @@ CC= g++
 
 
 INCLUDE = -Ilib/
-VERSION = c++11
+VERSION = c++14
 CFLAGS = -std=$(VERSION)
 
 SQL_FLAGS = -I/usr/local/include -I/usr/local/include/cppconn -Wl,-Bdynamic 

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <map>
 #include <cppconn/resultset.h>
+#include "lib/str.h"
 #include "lib/objects/sql.h"
 struct mf_structure {
 	string cust;
@@ -44,6 +45,7 @@ struct avg3quant{
 	int64_t sum;
 };
 struct key{
+	string cust;
 };
 struct keyComp {
 	bool operator()(const std::string& a, const std::string& b) const {
