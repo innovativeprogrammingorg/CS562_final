@@ -19,6 +19,7 @@ class Aggregate{
 		string toSQL();
 		string toString();
 		string toVar();
+		string toABSVar();
 		bool equals(string aggr);
 		static bool isAggregate(string aggr);
 };

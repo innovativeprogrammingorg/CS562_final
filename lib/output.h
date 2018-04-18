@@ -48,6 +48,9 @@ void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<
 	"#include <string>\n" \
 	"#include <vector>\n" \
 	"#include <cstdint>\n" \
+	"#include <map>\n"  \
+	"#include <cppconn/resultset.h>\n" \
+	"#include \"lib/str.h\"\n" \
 	"#include \"lib/objects/sql.h\"\n" 
 
 #endif

@@ -22,5 +22,7 @@ struct ct{
 vector<struct ct>* get_ct(vector<string>* select_columns, vector<Column*>* columns);
 
 string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<Column*>* columns);
+string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
+				    vector<Aggregate*>* all_aggregates);
 
 #endif

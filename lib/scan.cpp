@@ -126,15 +126,16 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	string out = "\tvector<struct sales*>* uniques = get_uniques(data);\n"
 				 "\tfor(vector<struct sales*>::iterator it = uniques->begin();it != uniques->end();it++){\n"
 				 "\t\tstruct mf_structure* entry = (struct mf_structure*)calloc(1,sizeof(struct mf_structure));\n";
-	for(vector<string>::iterator it = select_columns->begin(); it != select_columns->end(); it++){
+	for(auto it = select_columns->begin(); it != select_columns->end(); it++){
 		out += "\t\tentry->"+ *it + " = "+ "uniques->" + *it + ";\n";
 		out += "\t\tmf_struct->push_back(entry);\n";
 	}
+
 	for(int i = 1;i <= no_grouping_vars;i++){
-		string datatype = "struct group"+itoa(i);
+		string group_name = "struct group"+itoa(i);
 		string var = "entry"+itoa(i);
-		out += "\t\t"+datatype + "* "+ var + " = (" + datatype + "*)calloc(1,sizeof("+datatype+"));\n";
-		for(vector<string>::iterator it = select_columns->begin(); it != select_columns->end(); it++){
+		out += "\t\t"+group_name + "* "+ var + " = (" + group_name + "*)calloc(1,sizeof("+group_name+"));\n";
+		for(auto it = select_columns->begin(); it != select_columns->end(); it++){
 			out += "\t\t"+ var +"->"+ *it + " = "+ "uniques->" + *it + ";\n";
 			out += "\t\tgroup"+ itoa(i) +"->push_back("+ var +");\n";
 		}
@@ -142,11 +143,60 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	out += "\t}\n";
 	//End initial scan
 	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
-	string structures;
 	vector<struct ct>* cols = get_ct(select_columns,columns);
 	//Create the rest of the scans
-	for(int i = 1; i <= no_grouping_vars; i++){
-
+	
+	for(auto it = all_aggregates->begin(); it != all_aggregates->end(); it++){
+		string group_name = "group"+itoa((*it)->group);
+		string field = (*it)->toVar();
+		if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
+			string avg_group_name = "struct avg"+itoa((*it)->group)+(*it)->column;
+			string avg_name = "tmp"+itoa((*it)->group)+(*it)->column;
+			out += "\tmap<struct key,"+avg_group_name+ ">*"+avg_name + "= new map<struct key,"+avg_group_name+">(keyComp);\n";
+			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
+			out += "\t\tstruct key search_key;\n";
+			for(auto jt = select_columns->begin();jt != select_columns->end(); jt++){
+				out += "\t\tsearch_key."+ *jt + " = (*it)->"+ *jt + ";\n";
+			}
+			out += "\t\tmap<struct key,"+avg_group_name+">::iterator pos;\n";
+			out += "\t\tif((pos = "+avg_name+"->find(search_key)) == map::npos){\n";
+			out += "\t\t\t"+avg_group_name+" tmp_data;\n";
+			out += "\t\t\ttmp_data.count = 1;\n";
+			out += "\t\t\ttmp_data.sum = (*it)->"+(*it)->column+";\n";
+			out += "\t\t\t"+avg_name +"->emplace(search_key,tmp_data);\n";
+			out += "\t\t}else{\n";
+			out += "\t\t\t"+avg_name+"->at(pos).count += 1;\n";
+			out += "\t\t\t"+avg_name+"->at(pos).sum += (*it)->"+(*it)->column+";\n";
+			out += "\t\t}\n";
+			out += "\t}\n";
+			out += "\tfor(auto it = "+avg_name+"->begin(); it != "+avg_name+"->end();it++){\n";
+			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(group"+itoa((*it)->group);
+			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
+				out += ",it->first."+*jt;
+			}
+			out += ");\n";
+			out += "\t\t"+group_name+"->at(pos)->"+field+" = " + "(*it)->second.sum / (*it->second.count);\n";
+			out += "\t}\n";
+		}else if((*it)->func.compare("sum") == 0 || (*it)->func.compare("SUM") == 0){
+			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
+			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(group"+itoa((*it)->group);
+			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
+				out += ",it->first."+*jt;
+			}
+			out += ");\n";
+			out += "\t\t"+group_name+"->at(pos)->"+field + " += (*it)->" + field + ";\n";
+			out += "\t}\n";
+		}else if((*it)->func.compare("count") == 0 || (*it)->func.compare("COUNT") == 0){
+			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
+			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(group"+itoa((*it)->group);
+			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
+				out += ",it->first."+*jt;
+			}
+			out += ");\n";
+			out += "\t\t"+group_name+"->at(pos)->"+field + " += 1;\n";
+			out += "\t}\n";
+		}
 	}
+	
 	return out;
 }

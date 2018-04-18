@@ -43,11 +43,22 @@ string Aggregate::toString(){
 	return out;
 }
 
+string Aggregate::toABSVar(){
+	string out("");
+	out += this->func + "_" + this->column;	
+	if(this->group != 0){
+		out += "_";
+		out.append(itoa(this->group));
+	}
+	return out;
+}
+
 string Aggregate::toVar(){
 	string out("");
 	out += this->func + "_" + this->column;	
 	return out;
 }
+
 
 bool Aggregate::equals(string aggr){
 	return this->toString().compare(aggr) == 0;
