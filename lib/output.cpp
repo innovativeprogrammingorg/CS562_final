@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 vector<Column*>* getColumns(){
 	SQLConn* conn = new SQLConn("information_schema");
 	sql::ResultSet* res = conn->fetch(COLUMN_TYPE_QUERY);
@@ -37,7 +36,6 @@ vector<Aggregate*>* getSelectAggregates(vector<string>* select_attribute,vector<
 }
 
 
-
 void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 				 vector<string>* grouping_attr,vector<string>* f_vect,vector<string>* select_cond_vect,string having){
 	
@@ -48,7 +46,7 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	vector<Aggregate*>* all_aggregates = getAllAggregates(f_vect);
 	vector<string>* select_columns = new vector<string>();
 	vector<Aggregate*>* select_aggregates = getSelectAggregates(select_attribute,&select_columns);
-
+	vector<Conditions*>* select_conditions = Conditions::getConditions(select_cond_vect);
 	//Define the structures in the header
 	header += create_structures(select_attribute,columns);
 	header += create_grouping_var_structs(no_grouping_vars,columns,select_columns,all_aggregates);
@@ -58,13 +56,15 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 		"#include \"result.h\"\n"
 		"using namespace std;\n\n";
 	program += get_helpers(no_grouping_vars,select_columns,columns);
+	program += create_output_printer(select_attribute,columns);
 
 	program += "int main(){\n"
 		"\tsql::ResultSet* res;\n"
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
 	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr);
-	program += create_scans(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates);
+	program += create_scans(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having);
+	program += "\tprint_mf_structure(mf_struct);\n";
 	program += "\treturn 0;\n"
 				"}\n";
 	write_to_file("",OUTPUT_FILE_HEADER_LOCATION,header);

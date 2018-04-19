@@ -17,7 +17,7 @@ vector<string>* explode(string quan,string subject){
 			//cout<<"added "<<subj.substr(0,i)<<" to vector"<<endl;
 			if(i+qlength<=subj.size()){
 				subj = subj.substr(i+qlength);
-
+				
 			}else{
 				return out;
 			}
@@ -281,6 +281,30 @@ int64_t strpos(char * haystack, char * needle){
 	return -1;
 }
 
+int strpos_m(string haystack,int args,...){
+	va_list valist;
+	int_fast32_t i = 0;
+	size_t length = haystack.size();
+	vector<string> comps;
+
+	va_start(valist, args);
+	for(i = 0;i<args;i++){
+		comps.push_back((string)va_arg(valist,string));
+	}
+	va_end(valist);
+	for(i = 0;i<length;i++){
+		for(int j = 0;j<args;j++){
+			if(haystack[i] == comps.at(j)[0]){
+				if(haystack.substr(i,comps.at(j).size()).compare(comps.at(j)) == 0 ){
+					return (int)i;
+				}
+				
+			}
+		}
+	}
+	return -1;
+}
+
 int64_t count(string haystack, string needle){
 	size_t length = haystack.length();
 	size_t nlength = needle.length();
@@ -332,12 +356,26 @@ char* str_replace(char* search,char* replace,char* subject){
 	}
 	char* first_chunk = substring(subject,0,start);
 	
-	if(start+strlen(search)<strlen(subject)){
+	if(start+strlen(search) < strlen(subject)){
 		return str_replace(search,replace,concat(first_chunk,concat(replace,substr(subject,start+strlen(search)),SECOND),FIRST|SECOND));
 	}
 	return str_replace(search,replace,concat(first_chunk,replace,FIRST));
 
 }
+
+string str_replace(string search,string replace,string subject){
+	size_t start = subject.find(search);
+	if(start == string::npos){
+		return subject;
+	}
+	string first_chunk = subject.substr(0,start);
+	
+	if(start+search.length()<subject.length()){
+		return str_replace(search,replace,first_chunk + replace + subject.substr(start+search.length()));
+	}
+	return str_replace(search,replace,first_chunk + replace);
+}
+
 char* to_cstr(string s){
 	int64_t size = s.size();
 	char* out = (char*)calloc(sizeof(char),size + 1);

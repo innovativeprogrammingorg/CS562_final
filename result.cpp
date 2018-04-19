@@ -1,7 +1,7 @@
 #include "result.h"
 using namespace std;
 
-size_t vfind1(vector<struct group1*>* data , string cust){
+int vfind1(vector<struct group1*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group1*>::iterator it = data->begin(); it != data->end(); it++){
 		if(cust == (*it)->cust){
@@ -11,7 +11,7 @@ size_t vfind1(vector<struct group1*>* data , string cust){
 	}
 	 return -1;
 }
-size_t vfind2(vector<struct group2*>* data , string cust){
+int vfind2(vector<struct group2*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group2*>::iterator it = data->begin(); it != data->end(); it++){
 		if(cust == (*it)->cust){
@@ -21,7 +21,7 @@ size_t vfind2(vector<struct group2*>* data , string cust){
 	}
 	 return -1;
 }
-size_t vfind3(vector<struct group3*>* data , string cust){
+int vfind3(vector<struct group3*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group3*>::iterator it = data->begin(); it != data->end(); it++){
 		if(cust == (*it)->cust){
@@ -47,6 +47,12 @@ vector<struct sales*>* get_uniques(vector<struct sales*>* data){
 		}
 	}
 	return out;
+}
+void print_mf_structure(vector<struct mf_structure*>* mf_struct){
+	cout<<"|cust|1_sum_quant|2_sum_quant|3_sum_quant|"<<endl;
+	for(auto it = mf_struct->begin(); it != mf_struct->end(); it++){
+		cout<<"|"<<(*it)->cust<<"|"<<(*it)->sum_quant_1<<"|"<<(*it)->sum_quant_2<<"|"<<(*it)->sum_quant_3<<"|"<<endl;
+	}
 }
 int main(){
 	sql::ResultSet* res;
@@ -85,54 +91,97 @@ int main(){
 		data3->push_back(entry3);
 	}
 	for(auto it = data->begin(); it != data->end(); it++){
-		size_t pos = vfind1(data1,it->first.cust);
+		if(!((*it)->state.compare("NY") == 0)){
+			continue;
+		}
+		size_t pos = vfind1(data1,(*it)->cust);
 		data1->at(pos)->sum_quant += (*it)->quant;
 	}
-	map<struct key,struct avg1quant>*tmp1quant= new map<struct key,struct avg1quant,keyComp>();
+	auto tmp1quant= new map<struct key,struct avg1quant,keyComp>();
 	for(auto it = data->begin(); it != data->end(); it++){
+		if(!((*it)->state.compare("NY") == 0)){
+			continue;
+		}
 		struct key search_key;
 		search_key.cust = (*it)->cust;
 		map<struct key,struct avg1quant>::iterator pos;
-		if((pos = tmp1quant->find(search_key)) == map::npos){
+		if((pos = tmp1quant->find(search_key)) == tmp1quant->end()){
 			struct avg1quant tmp_data;
 			tmp_data.count = 1;
 			tmp_data.sum = (*it)->quant;
 			tmp1quant->emplace(search_key,tmp_data);
 		}else{
-			pos->count += 1;
-			pos->sum += (*it)->quant;
+			pos->second.count += 1;
+			pos->second.sum += (*it)->quant;
 		}
 	}
 	for(auto it = tmp1quant->begin(); it != tmp1quant->end();it++){
 		size_t pos = vfind1(data1,it->first.cust);
 		data1->at(pos)->avg_quant = it->second.sum / it->second.count;
 	}
+	delete tmp1quant;
 	for(auto it = data->begin(); it != data->end(); it++){
-		size_t pos = vfind2(data2,it->first.cust);
+		if(!((*it)->state.compare("NJ") == 0)){
+			continue;
+		}
+		size_t pos = vfind2(data2,(*it)->cust);
 		data2->at(pos)->sum_quant += (*it)->quant;
 	}
 	for(auto it = data->begin(); it != data->end(); it++){
-		size_t pos = vfind3(data3,it->first.cust);
+		if(!((*it)->state.compare("CT") == 0)){
+			continue;
+		}
+		size_t pos = vfind3(data3,(*it)->cust);
 		data3->at(pos)->sum_quant += (*it)->quant;
 	}
-	map<struct key,struct avg3quant>*tmp3quant= new map<struct key,struct avg3quant,keyComp>();
+	auto tmp3quant= new map<struct key,struct avg3quant,keyComp>();
 	for(auto it = data->begin(); it != data->end(); it++){
+		if(!((*it)->state.compare("CT") == 0)){
+			continue;
+		}
 		struct key search_key;
 		search_key.cust = (*it)->cust;
 		map<struct key,struct avg3quant>::iterator pos;
-		if((pos = tmp3quant->find(search_key)) == map::npos){
+		if((pos = tmp3quant->find(search_key)) == tmp3quant->end()){
 			struct avg3quant tmp_data;
 			tmp_data.count = 1;
 			tmp_data.sum = (*it)->quant;
 			tmp3quant->emplace(search_key,tmp_data);
 		}else{
-			pos->count += 1;
-			pos->sum += (*it)->quant;
+			pos->second.count += 1;
+			pos->second.sum += (*it)->quant;
 		}
 	}
 	for(auto it = tmp3quant->begin(); it != tmp3quant->end();it++){
 		size_t pos = vfind3(data3,it->first.cust);
 		data3->at(pos)->avg_quant = it->second.sum / it->second.count;
 	}
+	delete tmp3quant;
+	for(auto it = mf_struct->begin();it != mf_struct->end(); it++){
+		int pos1 = vfind1(data1,(*it)->cust);
+		int pos2 = vfind2(data2,(*it)->cust);
+		int pos3 = vfind3(data3,(*it)->cust);
+		if(!(data1->at(pos1)->sum_quant > 2 * data2->at(pos2)->sum_quant or data1->at(pos1)->avg_quant > data3->at(pos3)->avg_quant
+)){
+			mf_struct->erase(it);
+			it--;			continue;
+		}
+		if(pos1 != -1){
+			(*it)->sum_quant_1 = data1->at(pos1)->sum_quant;
+		}else{
+			(*it)->sum_quant_1 = 0;
+		}
+		if(pos2 != -1){
+			(*it)->sum_quant_2 = data2->at(pos2)->sum_quant;
+		}else{
+			(*it)->sum_quant_2 = 0;
+		}
+		if(pos3 != -1){
+			(*it)->sum_quant_3 = data3->at(pos3)->sum_quant;
+		}else{
+			(*it)->sum_quant_3 = 0;
+		}
+	}
+	print_mf_structure(mf_struct);
 	return 0;
 }

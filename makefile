@@ -42,9 +42,9 @@ test: re
 	make output
 
 $(OBJECTS): lib/objects/%.o : lib/objects/%.cpp
-	$(CC) $(CFLAGS) -c $< $(LIB) -o $@ 
+	$(CC) -g $(CFLAGS) -c $< $(LIB) -o $@ 
 
 $(LIB_OBJ): lib/%.o : lib/%.cpp
-	$(CC) $(CFLAGS) -c $<  -o $@ $(LIB)
+	$(CC) -g $(CFLAGS) -c $<  -o $@ $(LIB)
 	
 

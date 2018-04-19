@@ -8,7 +8,7 @@
 #include "objects/aggregate.h"
 
 
-
+string create_output_printer(vector<string>* select_attribute,vector<Column*>* columns);
 string create_structures(vector<string>* select_attribute,vector<Column*>* columns);
 string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* all_aggregates);
 

@@ -2,6 +2,42 @@
 
 using namespace std;
 
+
+
+string create_output_printer(vector<string>* select_attribute,vector<Column*>* columns){
+	string out = "void print_mf_structure(vector<struct mf_structure*>* mf_struct){\n"
+		"\tcout<<\"|";
+	for(auto it = select_attribute->begin();it!=select_attribute->end();it++){
+		out += *it + "|";
+	}
+	out += "\"<<endl;\n";
+	out += "\tfor(auto it = mf_struct->begin(); it != mf_struct->end(); it++){\n";
+		   out += "\t\tcout<<\"|\"";
+	for(auto it = select_attribute->begin();it!=select_attribute->end();it++){
+		out += "<<";
+		//int type;
+		string name = *it;
+		/*for(auto jt = columns->begin();jt!=columns->end();jt++){
+			if(name.find((*jt)->name)!=string::npos){
+				type = (*jt)->type;
+				break;
+			}
+		}*/
+		if(Aggregate::isAggregate(name)){
+			Aggregate* tmp = new Aggregate(name);
+			out += "(*it)->"+tmp->toABSVar();
+			delete tmp;
+		}else{
+			out += "(*it)->"+ name;	
+		}
+		out +="<<\"|\"";
+	}
+	out += "<<endl;\n"
+		"\t}\n"
+		"}\n";
+	return out;
+}
+
 string create_structures(vector<string>* select_attribute,vector<Column*>* columns){
 	string out("struct mf_structure {\n");
 	for(auto it = select_attribute->begin();it!=select_attribute->end();it++){
@@ -87,10 +123,37 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 	out += key_groupers;
 	out += "};\n";
 	out += "struct keyComp {\n"
-    "\tbool operator()(const std::string& a, const std::string& b) const {\n"
-        "\t\treturn a.compare(b) == 0;\n"
-    	"\t}\n"
-	"};\n";
+    "\tbool operator()(const struct key& a, const struct key& b) const {\n";
+ 	out += "\t\treturn ";
+ 	bool first = true;   
+    for(auto it = select_columns->begin();it!=select_columns->end();it++){
+		string name = *it;
+		int type;
+		for(auto jt = columns->begin();jt!=columns->end();jt++){
+			if(name.compare((*jt)->name) == 0){
+				type = (*jt)->type;
+				break;
+			}
+		}
+		if(first){
+			first = false;
+		}else{
+			out += " && ";
+		}
+		switch(type){
+			case CPP_STRING:
+				out += "a."+name+".compare(b."+name+") == 0";
+				break;
+			case CPP_INT64:
+			case CPP_FLOAT:
+			case CPP_DOUBLE:
+				out += "a."+name+" == b."+name;
+		}
+	}
+
+    out += ";\n";
+    out +=	"\t}\n"
+			"};\n";
 
 	return out;
 

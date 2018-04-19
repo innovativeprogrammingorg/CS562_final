@@ -12,6 +12,7 @@
 #include "structures.h"
 #include "query.h"
 #include "scan.h"
+#include "objects/conditions.h"
 #include "objects/column.h"
 #include "objects/aggregate.h"
 

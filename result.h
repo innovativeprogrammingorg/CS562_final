@@ -48,8 +48,8 @@ struct key{
 	string cust;
 };
 struct keyComp {
-	bool operator()(const std::string& a, const std::string& b) const {
-		return a.compare(b) == 0;
+	bool operator()(const struct key& a, const struct key& b) const {
+		return a.cust == b.cust;
 	}
 };
 #endif

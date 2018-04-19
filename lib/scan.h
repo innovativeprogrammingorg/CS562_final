@@ -6,6 +6,7 @@
 #include <map>
 #include "objects/column.h"
 #include "objects/aggregate.h"
+#include "objects/conditions.h"
 #include "str.h"
 
 using namespace std;
@@ -23,6 +24,6 @@ vector<struct ct>* get_ct(vector<string>* select_columns, vector<Column*>* colum
 
 string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<Column*>* columns);
 string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates);
+				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having);
 
 #endif

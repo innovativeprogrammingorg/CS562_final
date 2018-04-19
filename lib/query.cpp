@@ -20,7 +20,7 @@ string strip_grouping(string str){
 string construct_initial_query(int group,vector<string>* select_columns,vector<Aggregate*>* all_aggregates,vector<string>* grouping_attr,string select_cond){
 	string out = "SELECT ";
 	bool first = true;
-	for(vector<string>::iterator it = select_columns->begin();it != select_columns->end();it++){
+	for(auto it = select_columns->begin();it != select_columns->end();it++){
 		if(first){
 			out.append(*it);
 			first = false;
@@ -30,7 +30,7 @@ string construct_initial_query(int group,vector<string>* select_columns,vector<A
 		}
 	}
 
-	for(vector<Aggregate*>::iterator it = all_aggregates->begin();it != all_aggregates->end();it++){
+	for(auto it = all_aggregates->begin();it != all_aggregates->end();it++){
 		if((*it)->group != group){
 			continue;
 		}
@@ -45,7 +45,7 @@ string construct_initial_query(int group,vector<string>* select_columns,vector<A
 	out += " WHERE "+ strip_grouping(select_cond);
 	out += " GROUP BY ";
 	first = true;
-	for(vector<string>::iterator it = select_columns->begin();it != select_columns->end();it++){
+	for(auto it = select_columns->begin();it != select_columns->end();it++){
 		if(first){
 			out.append(*it);
 			first = false;
