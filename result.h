@@ -6,6 +6,7 @@
 #include <map>
 #include <cppconn/resultset.h>
 #include "lib/str.h"
+#include "lib/objects/average.h"
 #include "lib/objects/sql.h"
 struct mf_structure {
 	string cust;
@@ -25,7 +26,7 @@ struct sales{
 struct group1{
 	string cust;
 	int64_t sum_quant;
-	int64_t avg_quant;
+	Average<int64_t> avg_quant;
 };
 struct group2{
 	string cust;
@@ -34,15 +35,7 @@ struct group2{
 struct group3{
 	string cust;
 	int64_t sum_quant;
-	int64_t avg_quant;
-};
-struct avg1quant{
-	int count;
-	int64_t sum;
-};
-struct avg3quant{
-	int count;
-	int64_t sum;
+	Average<int64_t> avg_quant;
 };
 struct key{
 	string cust;

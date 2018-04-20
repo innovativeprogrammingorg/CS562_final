@@ -134,6 +134,9 @@ string parse_having(string having,vector<Column*>* columns){
 		if(Aggregate::isAggregate(*it)){
 			Aggregate* tmp = new Aggregate(*it);
 			out += "data" + itoa(tmp->group) + "->at(pos"+itoa(tmp->group)+")->"+tmp->toVar();
+			if(tmp->func.compare("avg") == 0 || tmp->func.compare("AVG") == 0){
+				out += ".value()";
+			}
 			delete tmp;
 		}else if(isColumn(*it,columns)){
 			out += "data->"+*it;
@@ -144,12 +147,7 @@ string parse_having(string having,vector<Column*>* columns){
 	return out;
 }
 
-
-
-string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having){
-	//Initial scan to fill unique non-aggregates
-	//variables
+string scan1(int no_grouping_vars,vector<string>* select_columns){
 	string out = "\tvector<struct sales*>* uniques = get_uniques(data);\n";
 
 	for(int i = 1;i<=no_grouping_vars;i++){
@@ -173,75 +171,69 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 		}
 	}
 	out += "\t}\n";
-	//End initial scan
-	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
-	vector<struct ct>* cols = get_ct(select_columns,columns);
-	
-	
-	//Scan part 2
-	//TODO: Optimize THIS
+	return out;
+}
+
+string scan2(vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,vector<string>* select_columns){
+	string out = "\tfor(auto it = data->begin(); it != data->end();it++){\n";
+	out += "\t\tsize_t pos;\n";
 	for(auto it = all_aggregates->begin(); it != all_aggregates->end(); it++){
 		string type = "struct group"+itoa((*it)->group);
 		string name = "data"+itoa((*it)->group);
 		string field = (*it)->toVar();
 		if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
-			string avg_type = "struct avg"+itoa((*it)->group)+(*it)->column;
-			string avg_name = "tmp"+itoa((*it)->group)+(*it)->column;
-			out += "\tauto "+avg_name + "= new map<struct key,"+avg_type+",keyComp>();\n";
-			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
-			out += "\t\tif(!("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + ")){\n";
-			out += "\t\t\tcontinue;\n";
-			out += "\t\t}\n";
-			out += "\t\tstruct key search_key;\n";
-			for(auto jt = select_columns->begin();jt != select_columns->end(); jt++){
-				out += "\t\tsearch_key."+ *jt + " = (*it)->"+ *jt + ";\n";
-			}
-			out += "\t\tmap<struct key,"+avg_type+">::iterator pos;\n";
-			out += "\t\tif((pos = "+avg_name+"->find(search_key)) == "+avg_name+"->end()){\n";
-			out += "\t\t\t"+avg_type+" tmp_data;\n";
-			out += "\t\t\ttmp_data.count = 1;\n";
-			out += "\t\t\ttmp_data.sum = (*it)->"+(*it)->column+";\n";
-			out += "\t\t\t"+avg_name +"->emplace(search_key,tmp_data);\n";
-			out += "\t\t}else{\n"
-				   "\t\t\tpos->second.count += 1;\n";
-			out += "\t\t\tpos->second.sum += (*it)->"+(*it)->column+";\n";
-			out += "\t\t}\n"
-				   "\t}\n";
-			out += "\tfor(auto it = "+avg_name+"->begin(); it != "+avg_name+"->end();it++){\n";
-			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(data"+itoa((*it)->group);
+			out += "\t\tif("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + "){\n";
+			out += "\t\t\tpos = vfind"+itoa((*it)->group)+"("+name;
 			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
-				out += ",it->first."+*jt;
+				out += ",(*it)->"+*jt;
 			}
 			out += ");\n";
-			out += "\t\t"+name+"->at(pos)->"+field+" = " + "it->second.sum / it->second.count;\n";
-			out += "\t}\n";
-			out += "\tdelete "+avg_name+";\n";
+			out += "\t\t\t"+name+"->at(pos)->"+field + ".add((*it)->" + (*it)->column + ");\n";
+			out += "\t\t}\n";
+			
+			
 		}else if((*it)->func.compare("sum") == 0 || (*it)->func.compare("SUM") == 0){
-			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
-			out += "\t\tif(!("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + ")){\n";
-			out += "\t\t\tcontinue;\n";
-			out += "\t\t}\n";
-			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(data"+itoa((*it)->group);
+			out += "\t\tif("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + "){\n";
+		
+			out += "\t\t\tpos = vfind"+itoa((*it)->group)+"("+name;
 			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
 				out += ",(*it)->"+*jt;
 			}
 			out += ");\n";
-			out += "\t\t"+name+"->at(pos)->"+field + " += (*it)->" + (*it)->column + ";\n";
-			out += "\t}\n";
+			out += "\t\t\t"+name+"->at(pos)->"+field + " += (*it)->" + (*it)->column + ";\n";
+			out += "\t\t}\n";
 		}else if((*it)->func.compare("count") == 0 || (*it)->func.compare("COUNT") == 0){
-			out += "\tfor(auto it = data->begin(); it != data->end(); it++){\n";
-			out += "\t\tif(!("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + ")){\n";
-			out += "\t\t\tcontinue;\n";
-			out += "\t\t}\n";
-			out += "\t\tsize_t pos = vfind"+itoa((*it)->group)+"(data"+itoa((*it)->group);
+			out += "\t\tif("+select_conditions->at((*it)->group - 1)->toCpp("(*it)") + "){\n";
+			
+			out += "\t\t\tpos = vfind"+itoa((*it)->group)+"(data"+itoa((*it)->group);
 			for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
 				out += ",(*it)->"+*jt;
 			}
 			out += ");\n";
-			out += "\t\t"+name+"->at(pos)->"+field + " += 1;\n";
-			out += "\t}\n";
+			out += "\t\t\t"+name+"->at(pos)->"+field + " += 1;\n";
+			out += "\t\t}\n";
 		}
 	}
+	out += "\t}\n";
+
+	return out;
+}
+
+string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
+				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having){
+	//Initial scan to fill unique non-aggregates
+	//variables
+	
+	string out = scan1(no_grouping_vars,select_columns);
+	//End initial scan
+	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
+
+	vector<struct ct>* cols = get_ct(select_columns,columns);
+	
+	
+	//Scan part 2
+	out += scan2(all_aggregates,select_conditions,select_columns);
+	
 	//Scan Part 3
 	out += "\tfor(auto it = mf_struct->begin();it != mf_struct->end(); it++){\n";
 	string vfind_arg;
@@ -253,7 +245,7 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	}
 	out += "\t\tif(!("+parse_having(having,columns)+")){\n";
 	out += "\t\t\tmf_struct->erase(it);\n"
-		   "\t\t\tit--;"
+		   "\t\t\tit--;\n"
 		   "\t\t\tcontinue;\n"
 	       "\t\t}\n";
 	for(auto it = select_aggregates->begin();it != select_aggregates->end();it++){

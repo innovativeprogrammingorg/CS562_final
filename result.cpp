@@ -90,81 +90,38 @@ int main(){
 		entry3->cust = (*it)->cust;
 		data3->push_back(entry3);
 	}
-	for(auto it = data->begin(); it != data->end(); it++){
-		if(!((*it)->state.compare("NY") == 0)){
-			continue;
+	for(auto it = data->begin(); it != data->end();it++){
+		size_t pos;
+		if((*it)->state.compare("NY") == 0){
+			pos = vfind1(data1,(*it)->cust);
+			data1->at(pos)->sum_quant += (*it)->quant;
 		}
-		size_t pos = vfind1(data1,(*it)->cust);
-		data1->at(pos)->sum_quant += (*it)->quant;
-	}
-	auto tmp1quant= new map<struct key,struct avg1quant,keyComp>();
-	for(auto it = data->begin(); it != data->end(); it++){
-		if(!((*it)->state.compare("NY") == 0)){
-			continue;
+		if((*it)->state.compare("NY") == 0){
+			pos = vfind1(data1,(*it)->cust);
+			data1->at(pos)->avg_quant.add((*it)->quant);
 		}
-		struct key search_key;
-		search_key.cust = (*it)->cust;
-		map<struct key,struct avg1quant>::iterator pos;
-		if((pos = tmp1quant->find(search_key)) == tmp1quant->end()){
-			struct avg1quant tmp_data;
-			tmp_data.count = 1;
-			tmp_data.sum = (*it)->quant;
-			tmp1quant->emplace(search_key,tmp_data);
-		}else{
-			pos->second.count += 1;
-			pos->second.sum += (*it)->quant;
+		if((*it)->state.compare("NJ") == 0){
+			pos = vfind2(data2,(*it)->cust);
+			data2->at(pos)->sum_quant += (*it)->quant;
 		}
-	}
-	for(auto it = tmp1quant->begin(); it != tmp1quant->end();it++){
-		size_t pos = vfind1(data1,it->first.cust);
-		data1->at(pos)->avg_quant = it->second.sum / it->second.count;
-	}
-	delete tmp1quant;
-	for(auto it = data->begin(); it != data->end(); it++){
-		if(!((*it)->state.compare("NJ") == 0)){
-			continue;
+		if((*it)->state.compare("CT") == 0){
+			pos = vfind3(data3,(*it)->cust);
+			data3->at(pos)->sum_quant += (*it)->quant;
 		}
-		size_t pos = vfind2(data2,(*it)->cust);
-		data2->at(pos)->sum_quant += (*it)->quant;
-	}
-	for(auto it = data->begin(); it != data->end(); it++){
-		if(!((*it)->state.compare("CT") == 0)){
-			continue;
+		if((*it)->state.compare("CT") == 0){
+			pos = vfind3(data3,(*it)->cust);
+			data3->at(pos)->avg_quant.add((*it)->quant);
 		}
-		size_t pos = vfind3(data3,(*it)->cust);
-		data3->at(pos)->sum_quant += (*it)->quant;
-	}
-	auto tmp3quant= new map<struct key,struct avg3quant,keyComp>();
-	for(auto it = data->begin(); it != data->end(); it++){
-		if(!((*it)->state.compare("CT") == 0)){
-			continue;
 		}
-		struct key search_key;
-		search_key.cust = (*it)->cust;
-		map<struct key,struct avg3quant>::iterator pos;
-		if((pos = tmp3quant->find(search_key)) == tmp3quant->end()){
-			struct avg3quant tmp_data;
-			tmp_data.count = 1;
-			tmp_data.sum = (*it)->quant;
-			tmp3quant->emplace(search_key,tmp_data);
-		}else{
-			pos->second.count += 1;
-			pos->second.sum += (*it)->quant;
-		}
-	}
-	for(auto it = tmp3quant->begin(); it != tmp3quant->end();it++){
-		size_t pos = vfind3(data3,it->first.cust);
-		data3->at(pos)->avg_quant = it->second.sum / it->second.count;
-	}
-	delete tmp3quant;
 	for(auto it = mf_struct->begin();it != mf_struct->end(); it++){
 		int pos1 = vfind1(data1,(*it)->cust);
 		int pos2 = vfind2(data2,(*it)->cust);
 		int pos3 = vfind3(data3,(*it)->cust);
-		if(!(data1->at(pos1)->sum_quant > 2 * data2->at(pos2)->sum_quant or data1->at(pos1)->avg_quant > data3->at(pos3)->avg_quant
-)){
+		if(!(data1->at(pos1)->sum_quant > 2 * data2->at(pos2)->sum_quant or data1->at(pos1)->avg_quant.value() > data3->at(pos3)->avg_quant
+.value())){
 			mf_struct->erase(it);
-			it--;			continue;
+			it--;
+			continue;
 		}
 		if(pos1 != -1){
 			(*it)->sum_quant_1 = data1->at(pos1)->sum_quant;

@@ -14,6 +14,10 @@ CFLAGS += $(SQL_FLAGS)
 
 FILES = main.cpp 
 
+OUTPUT_FILES = lib/objects/sql.cpp
+
+OUTPUT_OBJECTS = $(foreach x, $(basename $(OUTPUT_FILES)), $(x).o)
+
 OBJECTS = $(foreach x, $(basename $(wildcard lib/objects/*.cpp)), $(x).o)
 
 LIB_OBJ =  $(foreach x, $(basename $(wildcard lib/*.cpp)), $(x).o)
@@ -27,7 +31,7 @@ final:
 	$(CC) -g $(FILES) -o final $(CFLAGS)  $(LIB) $(OBJECTS) $(LIB_OBJ) $(LINK_FLAGS)
 
 output:
-	$(CC) -g result.cpp -o result $(CFLAGS) $(LIB) lib/objects/sql.o $(LINK_FLAGS)
+	$(CC) -g result.cpp -o result $(CFLAGS) $(LIB) $(OUTPUT_OBJECTS)  $(LINK_FLAGS)
 
 clean: 
 	rm -f $(OBJECTS) $(LIB_OBJ) 
@@ -47,4 +51,3 @@ $(OBJECTS): lib/objects/%.o : lib/objects/%.cpp
 $(LIB_OBJ): lib/%.o : lib/%.cpp
 	$(CC) -g $(CFLAGS) -c $<  -o $@ $(LIB)
 	
-

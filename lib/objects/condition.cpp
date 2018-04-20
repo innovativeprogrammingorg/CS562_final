@@ -29,6 +29,9 @@ Condition::Condition(string cond){
 
 string Condition::toCpp(){
 	string out = this->column;
+	if(this->column.find("avg")!= string::npos){
+		out+= ".value()";
+	}
 	if(this->value.find("\"") != string::npos){
 		out += ".compare("+this->value+") == 0";
 	}else{

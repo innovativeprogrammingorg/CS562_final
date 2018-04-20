@@ -106,18 +106,15 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 				}
 			}
 			if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
-				avg_struct += "struct avg" + itoa((*it)->group) + (*it)->column + "{\n";
-				
-				avg_struct += "\tint count;\n";
-				avg_struct += "\t"+type+" sum;\n";
-				avg_struct += "};\n";
+				out += "\tAverage<"+type+"> " + (*it)->toVar() + ";\n";
+			}else{
+				out += "\t"+type + " " + (*it)->toVar() +";\n";
 			}
-			out += "\t"+type + " " + (*it)->toVar() +";\n";
+			
 		}
 		out += "};\n";
 
 	}
-	out += avg_struct;
 
 	out += "struct key{\n";
 	out += key_groupers;

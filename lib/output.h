@@ -52,7 +52,9 @@ void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<
 	"#include <map>\n"  \
 	"#include <cppconn/resultset.h>\n" \
 	"#include \"lib/str.h\"\n" \
-	"#include \"lib/objects/sql.h\"\n" 
+	"#include \"lib/objects/average.h\"\n" \
+	"#include \"lib/objects/sql.h\"\n" \
+
 
 #endif
 
