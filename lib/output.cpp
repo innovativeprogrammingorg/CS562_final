@@ -4,7 +4,8 @@ using namespace std;
 
 vector<Column*>* getColumns(){
 	SQLConn* conn = new SQLConn("information_schema");
-	sql::ResultSet* res = conn->fetch(COLUMN_TYPE_QUERY);
+	string query = "SELECT * FROM `COLUMNS` WHERE `TABLE_NAME` = \'"+string(TABLE)+"\' AND `TABLE_SCHEMA` = \'"+string(DATABASE)+"\'";
+	sql::ResultSet* res = conn->fetch(query);
 	vector<Column*>* columns = new vector<Column*>();
 	while(res->next()){
 		columns->push_back(new Column(res->getString("COLUMN_NAME"),res->getString("DATA_TYPE")));

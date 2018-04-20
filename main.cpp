@@ -7,6 +7,5 @@ int main(int argc,char** argv){
 		parse_file_input(string(argv[1]));
 	}	
 
-
 	return EXIT_SUCCESS;
 }

@@ -29,7 +29,7 @@ string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<
 		out += "int vfind"+ itoa(i) +"(vector<struct group"+itoa(i)+"*>* data ";
 		string vfind_arg;
 		string vfind_comp;
-		bool first = true;
+		first = true;
 		for(vector<struct ct>::iterator it = cols->begin(); it != cols->end(); it++){
 			vfind_arg = ", " + Column::getOutCppType(it->type) + " " + it->name;
 			if(first){
@@ -66,9 +66,9 @@ string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<
 	}
 	
 	out += "bool is_unique(vector<struct sales*>* data,struct sales* entry){\n"
-		"\tfor(vector<struct sales*>::iterator it = data->begin();it != data->end();it++){\n";
-	
-	out += "\t\tif(";
+		"\tfor(vector<struct sales*>::iterator it = data->begin();it != data->end();it++){\n"
+		"\t\tif(";
+	first = true;
 	for(vector<struct ct>::iterator it = cols->begin();it != cols->end(); it++){
 		if(first){
 			first = false;
@@ -147,7 +147,16 @@ string parse_having(string having,vector<Column*>* columns){
 	return out;
 }
 
-string scan1(int no_grouping_vars,vector<string>* select_columns){
+string getType(Aggregate* a,vector<Column*>* columns){
+	for(auto it = columns->begin(); it != columns->end(); it++){
+		if((*it)->name.compare(a->column) == 0){
+			return Column::getOutCppType((*it)->type);
+		}
+	}
+	return "";
+}
+
+string scan1(int no_grouping_vars,vector<string>* select_columns,vector<Aggregate*>* all_aggregates,vector<Column*>* columns){
 	string out = "\tvector<struct sales*>* uniques = get_uniques(data);\n";
 
 	for(int i = 1;i<=no_grouping_vars;i++){
@@ -224,7 +233,7 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	//Initial scan to fill unique non-aggregates
 	//variables
 	
-	string out = scan1(no_grouping_vars,select_columns);
+	string out = scan1(no_grouping_vars,select_columns,all_aggregates,columns);
 	//End initial scan
 	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
 	
@@ -250,7 +259,11 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 		string group = itoa((*it)->group);
 		
 		out += "\t\tif(pos"+itoa((*it)->group)+" != -1){\n";
-		out += "\t\t\t(*it)->"+(*it)->toABSVar() +" = data"+group+"->at(pos"+itoa((*it)->group)+")->"+(*it)->toVar()+";\n";
+		out += "\t\t\t(*it)->"+(*it)->toABSVar() +" = data"+group+"->at(pos"+itoa((*it)->group)+")->"+(*it)->toVar();
+		if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
+			out += ".value()";
+		}
+		out += ";\n";
 		out += "\t\t}else{\n";
 		out += "\t\t\t(*it)->"+(*it)->toABSVar() +" = 0;\n";
 		out += "\t\t}\n";

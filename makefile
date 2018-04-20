@@ -33,6 +33,9 @@ final:
 output:
 	$(CC) -g result.cpp -o result $(CFLAGS) $(LIB) $(OUTPUT_OBJECTS)  $(LINK_FLAGS)
 
+generate:
+	$(CC) -g generate.cpp -o generate $(CFLAGS) $(LIB) $(OUTPUT_OBJECTS)  $(LINK_FLAGS)
+
 clean: 
 	rm -f $(OBJECTS) $(LIB_OBJ) 
 

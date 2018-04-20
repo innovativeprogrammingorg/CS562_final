@@ -6,35 +6,24 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "debug.h"
 #include "str.h"
 #include "io.h"
 #include "objects/sql.h"
 #include "structures.h"
 #include "query.h"
 #include "scan.h"
+#include "config.h"
 #include "objects/conditions.h"
 #include "objects/column.h"
 #include "objects/aggregate.h"
 
 
 using namespace std;
+
 vector<Column*>* getColumns();
 vector<Aggregate*>* getAllAggregates(vector<string>* f_vect);
 void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<string>*,string);
 
-
-#ifndef TABLE
-#define TABLE "sales"
-#endif
-
-#ifndef DATABASE
-#define DATABASE "CS562"
-#endif
-
-#ifndef COLUMN_TYPE_QUERY
-#define COLUMN_TYPE_QUERY "SELECT * FROM `COLUMNS` WHERE `TABLE_NAME` = \'sales\' AND `TABLE_SCHEMA` = \'CS562\'"
-#endif
 
 #ifndef OUTPUT_FILE
 #define OUTPUT_FILE "./result.cpp"

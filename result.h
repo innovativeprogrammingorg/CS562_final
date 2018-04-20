@@ -11,8 +11,10 @@
 struct mf_structure {
 	string cust;
 	int64_t sum_quant_1;
+	int64_t avg_quant_1;
 	int64_t sum_quant_2;
 	int64_t sum_quant_3;
+	int64_t avg_quant_3;
 };
 struct sales{
 	string cust;

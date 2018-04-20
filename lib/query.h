@@ -4,18 +4,12 @@
 
 #include <vector>
 #include <string>
+#include "config.h"
 #include "objects/column.h"
 #include "objects/aggregate.h"
 
 using namespace std;
 
-#ifndef TABLE
-#define TABLE "sales"
-#endif
-
-#ifndef DATABASE
-#define DATABASE "CS562"
-#endif
 
 string strip_grouping(string str);
 string construct_initial_query(int group,vector<string>* select_columns,vector<Aggregate*>* all_aggregates,vector<string>* grouping_attr,string select_cond);

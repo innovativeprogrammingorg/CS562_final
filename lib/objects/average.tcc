@@ -11,6 +11,7 @@ Average<T>::Average(){
 template <typename T>
 void Average<T>::add(T val){
 	this->sum += val;
+	this->count++;
 }
 
 template <typename T>

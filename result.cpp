@@ -49,16 +49,16 @@ vector<struct sales*>* get_uniques(vector<struct sales*>* data){
 	return out;
 }
 void print_mf_structure(vector<struct mf_structure*>* mf_struct){
-	cout<<"|cust|1_sum_quant|2_sum_quant|3_sum_quant|"<<endl;
+	cout<<"|cust|1_sum_quant|1_avg_quant|2_sum_quant|3_sum_quant|3_avg_quant|"<<endl;
 	for(auto it = mf_struct->begin(); it != mf_struct->end(); it++){
-		cout<<"|"<<(*it)->cust<<"|"<<(*it)->sum_quant_1<<"|"<<(*it)->sum_quant_2<<"|"<<(*it)->sum_quant_3<<"|"<<endl;
+		cout<<"|"<<(*it)->cust<<"|"<<(*it)->sum_quant_1<<"|"<<(*it)->avg_quant_1<<"|"<<(*it)->sum_quant_2<<"|"<<(*it)->sum_quant_3<<"|"<<(*it)->avg_quant_3<<"|"<<endl;
 	}
 }
 int main(){
 	sql::ResultSet* res;
 	vector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();
 	SQLConn* conn = new SQLConn("CS562");
-	res = conn->fetch("SELECT * FROM sales");
+	res = conn->fetch("SELECT * FROM test");
 	vector<struct sales*>* data = new vector<struct sales*>();
 	while(res->next()){
 		struct sales* entry = (struct sales*)calloc(1,sizeof(struct sales));
@@ -128,6 +128,11 @@ int main(){
 		}else{
 			(*it)->sum_quant_1 = 0;
 		}
+		if(pos1 != -1){
+			(*it)->avg_quant_1 = data1->at(pos1)->avg_quant.value();
+		}else{
+			(*it)->avg_quant_1 = 0;
+		}
 		if(pos2 != -1){
 			(*it)->sum_quant_2 = data2->at(pos2)->sum_quant;
 		}else{
@@ -137,6 +142,11 @@ int main(){
 			(*it)->sum_quant_3 = data3->at(pos3)->sum_quant;
 		}else{
 			(*it)->sum_quant_3 = 0;
+		}
+		if(pos3 != -1){
+			(*it)->avg_quant_3 = data3->at(pos3)->avg_quant.value();
+		}else{
+			(*it)->avg_quant_3 = 0;
 		}
 	}
 	print_mf_structure(mf_struct);
