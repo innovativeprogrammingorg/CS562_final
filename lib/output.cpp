@@ -42,7 +42,7 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	string header = OUTPUT_FILE_HEADER_START;
 
 	vector<Column*>* columns =  getColumns();
-
+	//print_vector(columns);
 	vector<Aggregate*>* all_aggregates = getAllAggregates(f_vect);
 	vector<string>* select_columns = new vector<string>();
 	vector<Aggregate*>* select_aggregates = getSelectAggregates(select_attribute,&select_columns);

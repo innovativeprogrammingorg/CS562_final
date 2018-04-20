@@ -116,7 +116,7 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 
 	}
 
-	out += "struct key{\n";
+	/*out += "struct key{\n";
 	out += key_groupers;
 	out += "};\n";
 	out += "struct keyComp {\n"
@@ -150,7 +150,7 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 
     out += ";\n";
     out +=	"\t}\n"
-			"};\n";
+			"};\n";*/
 
 	return out;
 

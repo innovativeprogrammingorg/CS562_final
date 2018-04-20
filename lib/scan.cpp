@@ -10,7 +10,7 @@ vector<struct ct>* get_ct(vector<string>* select_columns, vector<Column*>* colum
 		c.name = *it;
 		for(vector<Column*>::iterator jt = columns->begin();jt!=columns->end();jt++){
 			if(c.name.find((*jt)->name)!=string::npos){
-				c.type = (*jt)->type;
+				c.type = (*jt)->ctype;
 				break;
 			}
 		}
@@ -120,7 +120,7 @@ bool isColumn(string col,vector<Column*>* columns){
 
 string parse_having(string having,vector<Column*>* columns){
 	if(having.length()<1){
-		return "false";
+		return "true";
 	}
 	vector<string>* expl = c_explode(' ',having);
 	string out;
@@ -227,8 +227,6 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	string out = scan1(no_grouping_vars,select_columns);
 	//End initial scan
 	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
-
-	vector<struct ct>* cols = get_ct(select_columns,columns);
 	
 	
 	//Scan part 2

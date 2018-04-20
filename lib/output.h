@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "debug.h"
 #include "str.h"
 #include "io.h"
 #include "objects/sql.h"

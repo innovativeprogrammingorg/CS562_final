@@ -8,6 +8,7 @@
 #include "objects/aggregate.h"
 #include "objects/conditions.h"
 #include "str.h"
+#include "debug.h"
 
 using namespace std;
 struct ct{

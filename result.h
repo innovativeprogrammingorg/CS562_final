@@ -37,12 +37,4 @@ struct group3{
 	int64_t sum_quant;
 	Average<int64_t> avg_quant;
 };
-struct key{
-	string cust;
-};
-struct keyComp {
-	bool operator()(const struct key& a, const struct key& b) const {
-		return a.cust == b.cust;
-	}
-};
 #endif

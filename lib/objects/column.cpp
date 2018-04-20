@@ -22,6 +22,7 @@ string Column::getOutCppType(int type){
 		case SQL_NUMERIC:
 		case SQL_MONEY:
 		case SQL_REAL:
+		case CPP_STRING:
 		{
 			return "string";
 		}
@@ -34,6 +35,7 @@ string Column::getOutCppType(int type){
 		{
 			return "vector<string>";
 		}
+		case CPP_INT64:
 		case SQL_YEAR:
 		case SQL_INT:
 		case SQL_TIMESTAMP:
@@ -41,11 +43,12 @@ string Column::getOutCppType(int type){
 		{
 			return "int64_t";
 		}
-	
+		case CPP_FLOAT:
 		case SQL_FLOAT:
 		{
 			return "float";
 		}
+		case CPP_DOUBLE:
 		case SQL_DOUBLE:
 		{
 			return "double";
@@ -56,6 +59,10 @@ string Column::getOutCppType(int type){
 		{
 			return "Date";
 		}
+	
+		
+		
+		
 		
 	}
 	return "";

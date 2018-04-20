@@ -4,7 +4,7 @@ using namespace std;
 int vfind1(vector<struct group1*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group1*>::iterator it = data->begin(); it != data->end(); it++){
-		if(cust == (*it)->cust){
+		if(cust.compare((*it)->cust) == 0){
 			return index;
 		}
 		index++;
@@ -14,7 +14,7 @@ int vfind1(vector<struct group1*>* data , string cust){
 int vfind2(vector<struct group2*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group2*>::iterator it = data->begin(); it != data->end(); it++){
-		if(cust == (*it)->cust){
+		if(cust.compare((*it)->cust) == 0){
 			return index;
 		}
 		index++;
@@ -24,7 +24,7 @@ int vfind2(vector<struct group2*>* data , string cust){
 int vfind3(vector<struct group3*>* data , string cust){
 	 size_t index = 0;
 	for(vector<struct group3*>::iterator it = data->begin(); it != data->end(); it++){
-		if(cust == (*it)->cust){
+		if(cust.compare((*it)->cust) == 0){
 			return index;
 		}
 		index++;
@@ -33,7 +33,7 @@ int vfind3(vector<struct group3*>* data , string cust){
 }
 bool is_unique(vector<struct sales*>* data,struct sales* entry){
 	for(vector<struct sales*>::iterator it = data->begin();it != data->end();it++){
-		if(entry->cust == (*it)->cust){
+		if(entry->cust.compare((*it)->cust) == 0){
 			return false;
 		}
 	}
@@ -112,7 +112,7 @@ int main(){
 			pos = vfind3(data3,(*it)->cust);
 			data3->at(pos)->avg_quant.add((*it)->quant);
 		}
-		}
+	}
 	for(auto it = mf_struct->begin();it != mf_struct->end(); it++){
 		int pos1 = vfind1(data1,(*it)->cust);
 		int pos2 = vfind2(data2,(*it)->cust);
