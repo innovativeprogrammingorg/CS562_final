@@ -116,42 +116,6 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 
 	}
 
-	/*out += "struct key{\n";
-	out += key_groupers;
-	out += "};\n";
-	out += "struct keyComp {\n"
-    "\tbool operator()(const struct key& a, const struct key& b) const {\n";
- 	out += "\t\treturn ";
- 	bool first = true;   
-    for(auto it = select_columns->begin();it!=select_columns->end();it++){
-		string name = *it;
-		int type;
-		for(auto jt = columns->begin();jt!=columns->end();jt++){
-			if(name.compare((*jt)->name) == 0){
-				type = (*jt)->type;
-				break;
-			}
-		}
-		if(first){
-			first = false;
-		}else{
-			out += " && ";
-		}
-		switch(type){
-			case CPP_STRING:
-				out += "a."+name+".compare(b."+name+") == 0";
-				break;
-			case CPP_INT64:
-			case CPP_FLOAT:
-			case CPP_DOUBLE:
-				out += "a."+name+" == b."+name;
-		}
-	}
-
-    out += ";\n";
-    out +=	"\t}\n"
-			"};\n";*/
-
 	return out;
 
 }

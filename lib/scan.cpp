@@ -147,16 +147,7 @@ string parse_having(string having,vector<Column*>* columns){
 	return out;
 }
 
-string getType(Aggregate* a,vector<Column*>* columns){
-	for(auto it = columns->begin(); it != columns->end(); it++){
-		if((*it)->name.compare(a->column) == 0){
-			return Column::getOutCppType((*it)->type);
-		}
-	}
-	return "";
-}
-
-string scan1(int no_grouping_vars,vector<string>* select_columns,vector<Aggregate*>* all_aggregates,vector<Column*>* columns){
+string scan1(int no_grouping_vars,vector<string>* select_columns){
 	string out = "\tvector<struct sales*>* uniques = get_uniques(data);\n";
 
 	for(int i = 1;i<=no_grouping_vars;i++){
@@ -233,7 +224,7 @@ string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>
 	//Initial scan to fill unique non-aggregates
 	//variables
 	
-	string out = scan1(no_grouping_vars,select_columns,all_aggregates,columns);
+	string out = scan1(no_grouping_vars,select_columns);
 	//End initial scan
 	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
 	

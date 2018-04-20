@@ -2,6 +2,7 @@
 #define _COLUMN_H_
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 enum SQLType {

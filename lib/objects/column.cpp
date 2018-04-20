@@ -59,11 +59,6 @@ string Column::getOutCppType(int type){
 		{
 			return "Date";
 		}
-	
-		
-		
-		
-		
 	}
 	return "";
 }
