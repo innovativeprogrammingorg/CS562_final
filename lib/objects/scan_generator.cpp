@@ -82,17 +82,17 @@ string Scan_Generator::prelim_scan(){
 
 	for(auto it = this->select_columns->begin(); it != this->select_columns->end(); it++){
 		out += "\t\tentry->"+ *it + " = "+ "(*it)->" + *it + ";\n";
-		out += "\t\tmf_struct->push_back(entry);\n";
+		
 	}
-
+	out += "\t\tmf_struct->push_back(entry);\n";
 	for(int i = 0;i <= this->no_grouping_vars;i++){
 		string type = "struct group"+itoa(i);
 		string var = "entry"+itoa(i);
 		out += "\t\t"+type + "* "+ var + " = (" + type + "*)calloc(1,sizeof("+type+"));\n";
 		for(auto it = this->select_columns->begin(); it != this->select_columns->end(); it++){
 			out += "\t\t"+ var +"->"+ *it + " = "+ "(*it)->" + *it + ";\n";
-			out += "\t\tdata"+ itoa(i) +"->push_back("+ var +");\n";
 		}
+		out += "\t\tdata"+ itoa(i) +"->push_back("+ var +");\n";
 	}
 	out += "\t}\n";
 	return out;

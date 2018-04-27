@@ -21,6 +21,17 @@ class Scan_Generator{
 		vector<Conditions*>* select_conditions;
 		string having;
 	public:
+		/**
+		 * Generates all 3 scans
+		 * @param  no_grouping_vars  The number of grouping variables
+		 * @param  columns           The columns in the table
+		 * @param  select_columns    The columns in the select statement
+		 * @param  select_aggregates The aggregates in the select statement
+		 * @param  all_aggregates    All of the aggregates
+		 * @param  select_conditions The such that logic for each grouping variable
+		 * @param  having            The having string
+		 * @return                   All 3 scans used for processing
+		 */
 		Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
 				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having);
 		string generate();

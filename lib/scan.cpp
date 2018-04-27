@@ -31,7 +31,7 @@ string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<
 		string vfind_comp;
 		first = true;
 		for(vector<struct ct>::iterator it = cols->begin(); it != cols->end(); it++){
-			vfind_arg = ", " + Column::getOutCppType(it->type) + " " + it->name;
+			vfind_arg += ", " + Column::getOutCppType(it->type) + " " + it->name;
 			if(first){
 				first = false;
 			}else{
@@ -106,20 +106,5 @@ string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<
 			"\t}\n"
 			"\treturn out;\n"
 		"}\n";
-	return out;
-}
-
-
-string create_scans(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having){
-	//Initial scan to fill unique non-aggregates
-	//variables
-	
-	string out = "";
-	//End initial scan
-	//At this point, the mf_struct and the grouping variable tables are initialized with all the unique grouping id
-
-	
-	
 	return out;
 }

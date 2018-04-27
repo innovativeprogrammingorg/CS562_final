@@ -1,7 +1,7 @@
 #include "result.h"
 using namespace std;
 
-int vfind0(vector<struct group0*>* data , string cust){
+int vfind0(vector<struct group0*>* data , string prod, string cust){
 	 size_t index = 0;
 	for(vector<struct group0*>::iterator it = data->begin(); it != data->end(); it++){
 		if(prod.compare((*it)->prod) == 0 && cust.compare((*it)->cust) == 0){
@@ -11,7 +11,7 @@ int vfind0(vector<struct group0*>* data , string cust){
 	}
 	 return -1;
 }
-int vfind1(vector<struct group1*>* data , string cust){
+int vfind1(vector<struct group1*>* data , string prod, string cust){
 	 size_t index = 0;
 	for(vector<struct group1*>::iterator it = data->begin(); it != data->end(); it++){
 		if(prod.compare((*it)->prod) == 0 && cust.compare((*it)->cust) == 0){
@@ -21,7 +21,7 @@ int vfind1(vector<struct group1*>* data , string cust){
 	}
 	 return -1;
 }
-int vfind2(vector<struct group2*>* data , string cust){
+int vfind2(vector<struct group2*>* data , string prod, string cust){
 	 size_t index = 0;
 	for(vector<struct group2*>::iterator it = data->begin(); it != data->end(); it++){
 		if(prod.compare((*it)->prod) == 0 && cust.compare((*it)->cust) == 0){
