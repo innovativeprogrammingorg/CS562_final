@@ -10,6 +10,7 @@ string parts[] = {
 	"SELECT CONDITION-VECT([σ]):",
 	"HAVING_CONDITION(G):"
 };
+
 void parse_user_input(){
 	vector<string>* select_attribute;
 	int no_grouping_vars;
@@ -22,6 +23,7 @@ void parse_user_input(){
 	string v;
 	string f;
 	string n;
+
 	cout<< parts[0] <<endl;
 	getline(cin,s);
 	cout<< parts[1] <<endl;
@@ -29,10 +31,8 @@ void parse_user_input(){
 	no_grouping_vars = stoi(n);
 	cout<< parts[2] <<endl;
 	getline(cin,v);
-	cout<<v<<endl;
 	cout<< parts[3] <<endl;
 	getline(cin,f);
-	cout<<f<<endl; 
 	select_cond_vect = new vector<string>();
 	cout<< parts[4] <<endl;
 	char buffer[500];

@@ -63,6 +63,15 @@ string Column::getOutCppType(int type){
 	return "";
 }
 
+bool Column::isColumn(string col,vector<Column*>* columns){
+	for(auto it = columns->begin(); it != columns->end();it++){
+		if(col.compare((*it)->name) == 0){
+			return true;
+		}
+	}
+	return false;
+}
+
 
 int Column::getCppType(int type){
 	switch(type){

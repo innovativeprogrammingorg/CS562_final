@@ -35,15 +35,22 @@ class SQLConn{
 	public:
 		string database;
 		sql::Connection* conn;
-	  	//sql::Statement* stmt;
-	  	//sql::ResultSet* res;
-	  	//sql::PreparedStatement* prep_stmt;
 		SQLConn();
 		SQLConn(string database);
 		virtual ~SQLConn();
+		/**
+		 * Switch to a new database
+		 * @param database The new database
+		 */
 		void update_database(string database = "");
+		/**
+		 * Execute a nornal query or a parameterized query
+		 */
 		void execute(string types,string query,...);
 		void execute(string query);
+		/**
+		 * Fetch the results from a normal query or a parameterized query
+		 */
 		sql::ResultSet* fetch(string types,string query,...);
 		sql::ResultSet* fetch(string query);
 

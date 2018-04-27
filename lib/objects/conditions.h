@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "column.h"
 #include "condition.h"
 
 
@@ -18,7 +19,7 @@ class Conditions{
 
 		Conditions(string conds);
 		virtual ~Conditions();
-		string toCpp(string var);
+		string toCpp(string var,vector<string>* select_columns);
 		static vector<Conditions*>* getConditions(vector<string>* cond);
 };
 

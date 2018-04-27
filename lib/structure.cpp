@@ -2,27 +2,18 @@
 
 using namespace std;
 
-
-
 string create_output_printer(vector<string>* select_attribute,vector<Column*>* columns){
 	string out = "void print_mf_structure(vector<struct mf_structure*>* mf_struct){\n"
-		"\tcout<<\"|";
+				 "\tcout<<\"|";
 	for(auto it = select_attribute->begin();it!=select_attribute->end();it++){
 		out += *it + "|";
 	}
-	out += "\"<<endl;\n";
-	out += "\tfor(auto it = mf_struct->begin(); it != mf_struct->end(); it++){\n";
-		   out += "\t\tcout<<\"|\"";
+	out += "\"<<endl;\n"
+		   "\tfor(auto it = mf_struct->begin(); it != mf_struct->end(); it++){\n"
+		   "\t\tcout<<\"|\"";
 	for(auto it = select_attribute->begin();it!=select_attribute->end();it++){
 		out += "<<";
-		//int type;
 		string name = *it;
-		/*for(auto jt = columns->begin();jt!=columns->end();jt++){
-			if(name.find((*jt)->name)!=string::npos){
-				type = (*jt)->type;
-				break;
-			}
-		}*/
 		if(Aggregate::isAggregate(name)){
 			Aggregate* tmp = new Aggregate(name);
 			out += "(*it)->"+tmp->toABSVar();
@@ -76,7 +67,7 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 	string out("");
 	string avg_struct;
 	string key_groupers = "";
-	for(int i = 1;i<=no;i++){
+	for(int i = 0;i<=no;i++){
 		out += "struct group"+itoa(i)+"{\n";
 		string groupers;
 		for(auto it = select_columns->begin();it!=select_columns->end();it++){
@@ -92,7 +83,6 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 		}
 		out += groupers;
 		key_groupers = groupers;
-		
 		for(auto it = all_aggregates->begin();it!=all_aggregates->end();it++){
 			if((*it)->group != i){
 				continue;
@@ -110,12 +100,8 @@ string create_grouping_var_structs(int no,vector<Column*>* columns,vector<string
 			}else{
 				out += "\t"+type + " " + (*it)->toVar() +";\n";
 			}
-			
 		}
 		out += "};\n";
-
 	}
-
 	return out;
-
 }

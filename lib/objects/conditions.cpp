@@ -26,10 +26,10 @@ Conditions::~Conditions(){
 	delete this->ops;
 }
 		
-string Conditions::toCpp(string var){
-	string out = var + "->" + this->conditions->at(0)->toCpp();
+string Conditions::toCpp(string var,vector<string>* select_columns){
+	string out = this->conditions->at(0)->toCpp(var,select_columns);
 	for(int i = 1;i<this->conditions->size();i++){
-		out += " " + this->ops->at(i - 1) + " " + var + "->" + this->conditions->at(i)->toCpp();
+		out += " " + this->ops->at(i - 1) + " " + this->conditions->at(i)->toCpp(var,select_columns);
 	}
 	return out;
 }

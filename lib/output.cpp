@@ -64,7 +64,8 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
 	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr);
-	program += create_scans(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having);
+	Scan_Generator* gen = new Scan_Generator(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having);
+	program += gen->generate();
 	program += "\tprint_mf_structure(mf_struct);\n";
 	program += "\treturn 0;\n"
 				"}\n";
@@ -75,5 +76,6 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 	delete all_aggregates;
 	delete select_columns;
 	delete select_aggregates;
+	delete gen;
 
 }

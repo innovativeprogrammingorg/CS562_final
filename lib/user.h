@@ -13,7 +13,15 @@
 #include "output.h"
 
 using namespace std;
+/**
+ * Handle input from the command 
+ */
 void parse_user_input();
+
+/**
+ * Parses input from a file
+ * @param file The file to parse
+ */
 void parse_file_input(string file);
 
 #endif

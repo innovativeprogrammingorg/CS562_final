@@ -27,17 +27,54 @@ Condition::Condition(string cond){
 	this->value = str_replace("'","\"",tmp);
 }
 
-string Condition::toCpp(){
-	string out = this->column;
-	if(this->column.find("avg")!= string::npos){
-		out+= ".value()";
-	}
-	if(this->value.find("\"") != string::npos){
-		out += ".compare("+this->value+") == 0";
+
+string Condition::toCpp(string var,vector<string>* select_columns){
+	string out; 
+	
+	if(Aggregate::isAggregate(this->value)){
+		Aggregate tmp = Aggregate(this->value);
+		string vfind_arg;
+		for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
+			vfind_arg += ","+var+"->"+*jt;
+		}
+		string pos = "vfind"+itoa(tmp.group)+"(data"+itoa(tmp.group)+vfind_arg+")";
+		#if defined(NULL_EXPR_FALSE)
+		out = "("+pos+" > 0 && ";
+		#else 
+		out = "("+pos+" == -1 || ";
+		#endif
+		string val = "data"+itoa(tmp.group)+"->at("+pos+")->"+tmp.toVar();
+		out += var + "->" +this->column;
+
+		if(this->column.find("avg")!= string::npos){
+			out+= ".value()";
+		}
+
+		if(this->value.find("avg") != string::npos){
+			val += ".value()";
+		}
+
+		if(this->value.find("\"") != string::npos){
+			out += ".compare("+val+") == 0";
+		}else if(this->exp.compare("=") != 0){
+			out += " "+this->exp+" "+val;
+		}else{
+			out += " == " + val;
+		}
+		out += ")";
 	}else{
-		out += " == " + this->value;
+		out = var + "->" +this->column;
+		if(this->column.find("avg")!= string::npos){
+			out+= ".value()";
+		}
+		if(this->value.find("\"") != string::npos){
+			out += ".compare("+this->value+") == 0";
+		}else if(this->exp.compare("=") != 0){
+			out += " "+this->exp+" "+this->value;
+		}else{
+			out += " == " + this->value;
+		}
 	}
+	
 	return out;
 }
-
-

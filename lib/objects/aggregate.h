@@ -7,11 +7,22 @@
 #include "../str.h"
 
 using namespace std;
-
+/**
+ * Represents an aggegate function
+ */
 class Aggregate{
 	public:
+		/**
+		 * The grouping variable
+		 */
 		int group;
+		/**
+		 * The function to be executed
+		 */
 		string func;
+		/**
+		 * The column on which the function is evaluated
+		 */
 		string column;
 		Aggregate(string aggr);
 		virtual ~Aggregate();

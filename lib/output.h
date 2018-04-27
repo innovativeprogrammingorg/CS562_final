@@ -16,12 +16,28 @@
 #include "objects/conditions.h"
 #include "objects/column.h"
 #include "objects/aggregate.h"
-
+#include "objects/scan_generator.h"
 
 using namespace std;
 
+/**
+ * Get the columns of the tables and their respective types
+ */
 vector<Column*>* getColumns();
+
+/**
+ * Get all of the aggregates of the query
+ */
 vector<Aggregate*>* getAllAggregates(vector<string>* f_vect);
+
+/**
+ * Get the aggregates which appear in the select statement and the columns which appear in the select statement, as different variables
+ */
+vector<Aggregate*>* getSelectAggregates(vector<string>* select_attribute,vector<string>** select_columns);
+
+/**
+ * Processes the query and outputs the program which executes the query
+ */
 void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<string>*,string);
 
 
@@ -44,7 +60,6 @@ void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<
 	"#include \"lib/str.h\"\n" \
 	"#include \"lib/objects/average.h\"\n" \
 	"#include \"lib/objects/sql.h\"\n" \
-
 
 #endif
 

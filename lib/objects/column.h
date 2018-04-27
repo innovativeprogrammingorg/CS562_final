@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 enum SQLType {
@@ -46,27 +47,57 @@ enum CCppType{
  * Conversion table 
  * VARCHAR, CHAR, TEXT -> string
  * SET, ENUM -> vector
- * INT -> int64_t
- * UINT -> int64_t
+ * INT,UINT,YEAR, TIMESTAMP -> int64_t
  * FLOAT -> float
  * DOUBLE -> double
  * DECIMAL -> string
- * DATE, DATETIME, TIME ->string
- * TIMESTAMP -> time_t
- * Year -> int
+ * DATE, DATETIME, TIME -> string
  * NUMERIC, MONEY, REAL -> string 
  * 
  */
 class Column{
 	public:
+		/**
+		 * Column Type
+		 */
 		int type;
+		/**
+		 * Column Type in C++
+		 */
 		int ctype;
+		/**
+		 * Column Name
+		 */
 		string name;
 		Column(string name,int type);
 		Column(string name,string type);
+		/**
+		 * Get a string of the C++ type for the given type
+		 * @param  type Either a CCPPType or SQLType
+		 * @return      A string representing a C++ type
+		 */
 		static string getOutCppType(int type);
+
+		/**
+		 * Checks whether the column exists in the table
+		 * @param  col     The column name to be tested
+		 * @param  columns The columns in the table
+		 * @return         Whether the column exists in the table
+		 */
+		static bool isColumn(string col,vector<Column*>* columns);
 	private:
+		/**
+		 * Gets the CPPType from the SQL type
+		 * @param  type SQL type
+		 * @return      CPPType
+		 */
 		static int getCppType(int type);
+
+		/**
+		 * Get the SQL type from a string
+		 * @param  type The type of the column
+		 * @return      SQLType
+		 */
 		static int getType(string type);	
 };
 

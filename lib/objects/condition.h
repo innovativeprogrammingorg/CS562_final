@@ -1,8 +1,10 @@
-#ifndef _CONDITION_H_
+#ifndef _CONDITION_H_ 
 #define _CONDITION_H_
 
 #include <vector>
 #include <string>
+#include "../config.h"
+#include "aggregate.h"
 #include "../str.h"
 
 using namespace std;
@@ -15,7 +17,7 @@ class Condition{
 		string value;
 
 		Condition(string cond);
-		string toCpp();
+		string toCpp(string var,vector<string>* select_columns);
 };
 
 #endif

@@ -3,11 +3,13 @@
 
 
 #ifndef TABLE
-#define TABLE "tests"
+#define TABLE "test"
 #endif
 
 #ifndef DATABASE
 #define DATABASE "CS562"
 #endif
+
+#define NULL_EXPR_FALSE true
 
 #endif

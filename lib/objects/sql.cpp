@@ -1,6 +1,4 @@
 #include "sql.h"
-
-
 using namespace std;
 
 string SQLConn::location = "tcp://127.0.0.1:3306";

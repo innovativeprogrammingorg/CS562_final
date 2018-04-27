@@ -40,13 +40,16 @@ clean:
 	rm -f $(OBJECTS) $(LIB_OBJ) 
 
 fclean:
-	rm -f final output
+	rm -f final result
 	
 re: fclean all
 
 test: re
 	./final "./test"
 	make output
+
+sample:
+	$(CC) -g test.cpp -o test $(CFLAGS) 
 
 $(OBJECTS): lib/objects/%.o : lib/objects/%.cpp
 	$(CC) -g $(CFLAGS) -c $< $(LIB) -o $@ 

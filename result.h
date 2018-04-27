@@ -10,6 +10,8 @@
 #include "lib/objects/sql.h"
 struct mf_structure {
 	string prod;
+	string cust;
+	int64_t avg_quant;
 	int64_t sum_quant_1;
 	int64_t avg_quant_1;
 	int64_t sum_quant_2;
@@ -23,13 +25,20 @@ struct sales{
 	string state;
 	int64_t quant;
 };
+struct group0{
+	string prod;
+	string cust;
+	Average<int64_t> avg_quant;
+};
 struct group1{
 	string prod;
+	string cust;
 	int64_t sum_quant;
 	Average<int64_t> avg_quant;
 };
 struct group2{
 	string prod;
+	string cust;
 	int64_t sum_quant;
 	Average<int64_t> avg_quant;
 };
