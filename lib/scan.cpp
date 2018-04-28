@@ -19,8 +19,8 @@ vector<struct ct>* get_ct(vector<string>* select_columns, vector<Column*>* colum
 	return cols;
 }
 
-string get_helpers(int no_grouping_vars, vector<string>* select_columns, vector<Column*>* columns){
-	vector<struct ct>* cols = get_ct(select_columns,columns);
+string get_helpers(int no_grouping_vars, vector<string>* grouping_attr, vector<Column*>* columns){
+	vector<struct ct>* cols = get_ct(grouping_attr,columns);
 	string out;
 	bool first = true;
 

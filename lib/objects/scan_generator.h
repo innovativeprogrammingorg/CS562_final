@@ -20,6 +20,7 @@ class Scan_Generator{
 		vector<Aggregate*>* all_aggregates;
 		vector<Conditions*>* select_conditions;
 		string having;
+		vector<string>* grouping_attr;
 	public:
 		/**
 		 * Generates all 3 scans
@@ -33,7 +34,7 @@ class Scan_Generator{
 		 * @return                   All 3 scans used for processing
 		 */
 		Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having);
+				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr);
 		string generate();
 	private:
 		/**

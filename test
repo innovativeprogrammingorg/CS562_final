@@ -1,5 +1,5 @@
 SELECT ATTRIBUTE(S):
-prod, cust, avg_quant, 1_sum_quant, 1_avg_quant, 2_sum_quant
+prod, cust, state, avg_quant, 1_sum_quant, 1_avg_quant, 2_sum_quant
 NUMBER OF GROUPING VARIABLES(n):
 2
 GROUPING ATTRIBUTES(V):
@@ -10,3 +10,4 @@ SELECT CONDITION-VECT([σ]):
 1.state='NY' and 1.quant>avg_quant 
 2.state='NJ'
 HAVING_CONDITION(G):
+1_sum_quant > 0

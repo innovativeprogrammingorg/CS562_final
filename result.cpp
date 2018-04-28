@@ -49,9 +49,9 @@ vector<struct sales*>* get_uniques(vector<struct sales*>* data){
 	return out;
 }
 void print_mf_structure(vector<struct mf_structure*>* mf_struct){
-	cout<<"|prod|cust|avg_quant|1_sum_quant|1_avg_quant|2_sum_quant|"<<endl;
+	cout<<"|prod|cust|state|avg_quant|1_sum_quant|1_avg_quant|2_sum_quant|"<<endl;
 	for(auto it = mf_struct->begin(); it != mf_struct->end(); it++){
-		cout<<"|"<<(*it)->prod<<"|"<<(*it)->cust<<"|"<<(*it)->avg_quant<<"|"<<(*it)->sum_quant_1<<"|"<<(*it)->avg_quant_1<<"|"<<(*it)->sum_quant_2<<"|"<<endl;
+		cout<<"|"<<(*it)->prod<<"|"<<(*it)->cust<<"|"<<(*it)->state<<"|"<<(*it)->avg_quant<<"|"<<(*it)->sum_quant_1<<"|"<<(*it)->avg_quant_1<<"|"<<(*it)->sum_quant_2<<"|"<<endl;
 	}
 }
 int main(){
@@ -79,23 +79,23 @@ int main(){
 	for(vector<struct sales*>::iterator it = uniques->begin();it != uniques->end();it++){
 		struct mf_structure* entry = (struct mf_structure*)calloc(1,sizeof(struct mf_structure));
 		entry->prod = (*it)->prod;
-		mf_struct->push_back(entry);
 		entry->cust = (*it)->cust;
+		entry->state = (*it)->state;
 		mf_struct->push_back(entry);
 		struct group0* entry0 = (struct group0*)calloc(1,sizeof(struct group0));
 		entry0->prod = (*it)->prod;
-		data0->push_back(entry0);
 		entry0->cust = (*it)->cust;
+		entry0->state = (*it)->state;
 		data0->push_back(entry0);
 		struct group1* entry1 = (struct group1*)calloc(1,sizeof(struct group1));
 		entry1->prod = (*it)->prod;
-		data1->push_back(entry1);
 		entry1->cust = (*it)->cust;
+		entry1->state = (*it)->state;
 		data1->push_back(entry1);
 		struct group2* entry2 = (struct group2*)calloc(1,sizeof(struct group2));
 		entry2->prod = (*it)->prod;
-		data2->push_back(entry2);
 		entry2->cust = (*it)->cust;
+		entry2->state = (*it)->state;
 		data2->push_back(entry2);
 	}
 	for(auto it = data->begin(); it != data->end();it++){
@@ -103,6 +103,10 @@ int main(){
 		if(true){
 			pos = vfind0(data0,(*it)->prod,(*it)->cust);
 			data0->at(pos)->avg_quant.add((*it)->quant);
+		}else{
+			mf_struct->erase(mf_struct->begin() + pos);
+			it--;
+			continue;
 		}
 	}
 	for(auto it = data->begin(); it != data->end();it++){
@@ -110,10 +114,11 @@ int main(){
 		if((*it)->state.compare("NY") == 0 and (vfind0(data0,(*it)->prod,(*it)->cust) > 0 && (*it)->quant > data0->at(vfind0(data0,(*it)->prod,(*it)->cust))->avg_quant .value())){
 			pos = vfind1(data1,(*it)->prod,(*it)->cust);
 			data1->at(pos)->sum_quant += (*it)->quant;
-		}
-		if((*it)->state.compare("NY") == 0 and (vfind0(data0,(*it)->prod,(*it)->cust) > 0 && (*it)->quant > data0->at(vfind0(data0,(*it)->prod,(*it)->cust))->avg_quant .value())){
-			pos = vfind1(data1,(*it)->prod,(*it)->cust);
 			data1->at(pos)->avg_quant.add((*it)->quant);
+		}else{
+			mf_struct->erase(mf_struct->begin() + pos);
+			it--;
+			continue;
 		}
 	}
 	for(auto it = data->begin(); it != data->end();it++){
@@ -121,17 +126,19 @@ int main(){
 		if((*it)->state.compare("NJ") == 0){
 			pos = vfind2(data2,(*it)->prod,(*it)->cust);
 			data2->at(pos)->sum_quant += (*it)->quant;
-		}
-		if((*it)->state.compare("NJ") == 0){
-			pos = vfind2(data2,(*it)->prod,(*it)->cust);
 			data2->at(pos)->avg_quant.add((*it)->quant);
+		}else{
+			mf_struct->erase(mf_struct->begin() + pos);
+			it--;
+			continue;
 		}
 	}
 	for(auto it = mf_struct->begin();it != mf_struct->end(); it++){
 		int pos0 = vfind0(data0,(*it)->prod,(*it)->cust);
 		int pos1 = vfind1(data1,(*it)->prod,(*it)->cust);
 		int pos2 = vfind2(data2,(*it)->prod,(*it)->cust);
-		if(!(true)){
+		if(!(data1->at(pos1)->sum_quant > 0
+)){
 			mf_struct->erase(it);
 			it--;
 			continue;
@@ -139,23 +146,19 @@ int main(){
 		if(pos0 != -1){
 			(*it)->avg_quant = data0->at(pos0)->avg_quant.value();
 		}else{
-			(*it)->avg_quant = 0;
-		}
+			mf_struct->erase(it);			it--;			continue;		}
 		if(pos1 != -1){
 			(*it)->sum_quant_1 = data1->at(pos1)->sum_quant;
 		}else{
-			(*it)->sum_quant_1 = 0;
-		}
+			mf_struct->erase(it);			it--;			continue;		}
 		if(pos1 != -1){
 			(*it)->avg_quant_1 = data1->at(pos1)->avg_quant.value();
 		}else{
-			(*it)->avg_quant_1 = 0;
-		}
+			mf_struct->erase(it);			it--;			continue;		}
 		if(pos2 != -1){
 			(*it)->sum_quant_2 = data2->at(pos2)->sum_quant;
 		}else{
-			(*it)->sum_quant_2 = 0;
-		}
+			mf_struct->erase(it);			it--;			continue;		}
 	}
 	print_mf_structure(mf_struct);
 	return 0;
