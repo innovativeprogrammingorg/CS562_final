@@ -83,7 +83,12 @@ void parse_file_input(string file){
 	cout<<"V: "<<v<<endl;
 	f = data.substr(index4+parts[3].length()+1,index5 - (index4+parts[3].length() + 2));
 	cout<<"F: "<<f<<endl;
-	svc = data.substr(index5+parts[4].length()+1,index6 - (index5+parts[4].length() + 2));
+	if(no_grouping_vars>0){
+		svc = data.substr(index5+parts[4].length()+1,index6 - (index5+parts[4].length() + 2));
+	}else{
+		svc = "";
+	}
+	
 	cout<<"SVC: "<<svc<<endl;
 	having = data.substr(index6+parts[5].length()+1);
 	cout<<"Having: "<<having<<endl;

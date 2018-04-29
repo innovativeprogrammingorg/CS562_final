@@ -134,11 +134,7 @@ string Scan_Generator::aggregate_scan(){
 				out += "\t\t\t}\n"; 
 			}
 		}
-		out += "\t\t}else{\n"
-			   "\t\t\tmf_struct->erase(mf_struct->begin() + pos);\n"
-			   "\t\t\tit--;\n"
-			   "\t\t\tcontinue;\n"
-			   "\t\t}\n"
+		out += "\t\t}\n"
 			   "\t}\n";
 		i++;
 	}	
@@ -151,20 +147,10 @@ string Scan_Generator::fill_mfstruct(){
 	for(auto jt = this->grouping_attr->begin(); jt != this->grouping_attr->end(); jt++){
 		vfind_arg += ",(*it)->"+*jt;
 	}
-	cout<<"vfind_arg finished"<<endl;
 	for(int i = 0; i <= this->no_grouping_vars; i++){
 		out += "\t\tint pos" + itoa(i) + " = vfind"+itoa(i)+"(data"+itoa(i)+vfind_arg+");\n";
 	}
 	out += "\t\tif(!("+this->parse_having()+")";
-	/*bool first = true;
-	for(int i = 0; i <= this->no_grouping_vars; i++){
-		if(first){
-			first = false;
-		}else{
-			out += " && ";
-		}
-		out += this->get_selection_cond(i);
-	}*/
 
 	out += "){\n"
 	 	   "\t\t\tmf_struct->erase(it);\n"
@@ -181,9 +167,9 @@ string Scan_Generator::fill_mfstruct(){
 		}
 		out += ";\n"
 			   "\t\t}else{\n"
-			   "\t\t\tmf_struct->erase(it);"
-			   "\t\t\tit--;"
-			   "\t\t\tcontinue;";
+			   "\t\t\tmf_struct->erase(it);\n"
+			   "\t\t\tit--;\n"
+			   "\t\t\tcontinue;\n";
 		out += "\t\t}\n";
 	}
 	out += "\t}\n";

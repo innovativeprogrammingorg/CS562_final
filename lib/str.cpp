@@ -4,7 +4,8 @@ using namespace std;
 
 vector<string>* explode(string quan,string subject){
 	if(subject.size() == 0 || quan.size()==0){
-		throw "Gave an empty string into explode";
+		cerr<<"Gave an empty string into explode"<<endl;
+		return nullptr;
 	}
 	vector<string>* out = new vector<string>();
 	string subj = subject.substr(0);                                          

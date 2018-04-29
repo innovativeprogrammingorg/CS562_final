@@ -11,11 +11,7 @@
 struct mf_structure {
 	string prod;
 	string cust;
-	string state;
 	int64_t avg_quant;
-	int64_t sum_quant_1;
-	int64_t avg_quant_1;
-	int64_t sum_quant_2;
 };
 struct sales{
 	string cust;
@@ -29,21 +25,6 @@ struct sales{
 struct group0{
 	string prod;
 	string cust;
-	string state;
-	Average<int64_t> avg_quant;
-};
-struct group1{
-	string prod;
-	string cust;
-	string state;
-	int64_t sum_quant;
-	Average<int64_t> avg_quant;
-};
-struct group2{
-	string prod;
-	string cust;
-	string state;
-	int64_t sum_quant;
 	Average<int64_t> avg_quant;
 };
 #endif

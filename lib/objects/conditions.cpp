@@ -36,6 +36,13 @@ string Conditions::toCpp(string var,vector<string>* select_columns){
 
 
 vector<Conditions*>* Conditions::getConditions(vector<string>* cond){
+	if(cond == nullptr || cond->size() == 0){
+		return nullptr;
+	}else if(cond->size() == 1){
+		cout<<"First cond: "<<cond->at(0)<<endl;
+	}else{
+		cout<<"Cond size is "<<cond->size()<<endl;
+	}
 	vector<Conditions*>* out = new vector<Conditions*>();
 	for(auto it = cond->begin();it != cond->end(); it++){
 		out->push_back(new Conditions(*it));
