@@ -10,8 +10,20 @@
 
 using namespace std;
 
+/**
+ * Resolves the type into the appropiate function in the 
+ * mysql connect library
+ * @param  type The type of the column
+ * @return      The fuction capable of fetching it
+ */
 string get_sql_res_function(int type);
 
-string data_retrieval(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<string>* select_cond_vect,
-					  vector<Aggregate*>* all_aggregates,vector<string>* grouping_attr,string where);
+/**
+ * Generates code which fetches the data from the table and
+ * puts it in a data structure
+ * @param  columns The table's columns
+ * @param  where   The query where clause
+ * @return         The code
+ */
+string data_retrieval(vector<Column*>* columns,string where);
 #endif

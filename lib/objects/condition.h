@@ -18,8 +18,20 @@ class Condition{
 		string exp;
 		string value;
 
+		/**
+		 * Creates a new condition object from the condition string
+		 */
 		Condition(string cond);
-		string toCpp(string var,string var2,vector<string>* select_columns,vector<Column*>* columns);
+
+		/**
+		 * Converts this condition into a C++ expression which resolves to a bool
+		 * @param  var            The variable which contains the column
+		 * @param  var2           The variable which contains the value (May not be used)
+		 * @param  grouping_atr   The grouping attributes
+		 * @param  columns        The columns in the table
+		 * @return                A bool expression
+		 */
+		string toCpp(string var,string var2,vector<string>* grouping_attr,vector<Column*>* columns);
 };
 
 #endif

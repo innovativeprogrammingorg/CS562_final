@@ -43,7 +43,6 @@ enum CCppType{
 
 /**
  * For simplicity's sake, for the time being, the max size is not being included
- * This could be represented as a struct, but for simplicity, it is a class
  * Conversion table 
  * VARCHAR, CHAR, TEXT -> string
  * SET, ENUM -> vector

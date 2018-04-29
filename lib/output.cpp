@@ -63,7 +63,7 @@ void parse_query(vector<string>* select_attribute,string where,int no_grouping_v
 		"\tsql::ResultSet* res;\n"
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
-	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr,where);
+	program += data_retrieval(columns,where);
 	Scan_Generator* gen = new Scan_Generator(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having,grouping_attr,emf);
 	program += gen->generate();
 	program += "\tprint_mf_structure(mf_struct);\n";
