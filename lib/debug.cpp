@@ -15,7 +15,6 @@ void print_vector(vector<string>* vec){
 	}
 }
 
-
 void print_vector(vector<Column*>* vec){
 	if(vec == nullptr){
 		cout<<"nullptr"<<endl;

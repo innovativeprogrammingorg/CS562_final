@@ -19,7 +19,7 @@ class Conditions{
 
 		Conditions(string conds);
 		virtual ~Conditions();
-		string toCpp(string var,vector<string>* select_columns);
+		string toCpp(string var,string var2,vector<string>* select_columns,vector<Column*>* columns);
 		static vector<Conditions*>* getConditions(vector<string>* cond);
 };
 

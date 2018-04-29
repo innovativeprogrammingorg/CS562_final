@@ -4,7 +4,7 @@ using namespace std;
 
 
 Scan_Generator::Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr){
+				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr,bool emf){
 	this->no_grouping_vars = no_grouping_vars;
 	this->columns = columns;
 	this->select_columns = select_columns;
@@ -13,16 +13,20 @@ Scan_Generator::Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vec
 	this->select_conditions = select_conditions;
 	this->having = having;
 	this->grouping_attr = grouping_attr;
+	this->emf = emf;
 }
 
 string Scan_Generator::generate(){
 	string out = this->prelim_scan();
-	out += this->aggregate_scan();
+	if(this->emf){
+		out += this->emf_aggregate_scan();
+	}else{
+		out += this->aggregate_scan();
+	}
+	
 	out += this->fill_mfstruct();
 	return out;
 }
-
-
 
 string Scan_Generator::parse_having(){
 	if(this->having.length()<1){
@@ -57,7 +61,7 @@ string Scan_Generator::get_selection_cond(int group){
 	if(group == 0){
 		return "true";
 	}
-	return select_conditions->at(group - 1)->toCpp("(*it)",this->grouping_attr);
+	return select_conditions->at(group - 1)->toCpp("(*it)","(*xt)",this->grouping_attr,this->columns);
 }
 
 vector<vector<Aggregate*>> Scan_Generator::group_aggregates(){
@@ -105,8 +109,8 @@ string Scan_Generator::aggregate_scan(){
 	vector<vector<Aggregate*>> groups = this->group_aggregates();
 	int i = 0;
 	for(auto xt = groups.begin(); xt !=  groups.end(); xt++){
-		out += "\tfor(auto it = data->begin(); it != data->end();it++){\n";
-		out += "\t\tsize_t pos;\n";
+		out += "\tfor(auto it = data->begin(); it != data->end();it++){\n"
+			   "\t\tsize_t pos;\n";
 		out += "\t\tif(" + this->get_selection_cond(i) + "){\n";
 		out += "\t\t\tpos = vfind"+itoa(i)+"(data"+itoa(i);
 		for(auto jt = this->grouping_attr->begin(); jt != this->grouping_attr->end(); jt++){
@@ -141,6 +145,50 @@ string Scan_Generator::aggregate_scan(){
 	return out;
 }
 
+string Scan_Generator::emf_aggregate_scan(){
+	string out;
+	vector<vector<Aggregate*>> groups = this->group_aggregates();
+	int i = 0;
+	for(auto xt = groups.begin(); xt !=  groups.end(); xt++){
+		out += "\tfor(auto it = uniques->begin();it != uniques->end();it++)\n";
+		out += "\tfor(auto xt = data->begin(); xt != data->end();xt++){\n"
+			   "\t\tsize_t pos;\n";
+		out += "\t\tif(" + this->get_selection_cond(i) + "){\n";
+		out += "\t\t\tpos = vfind"+itoa(i)+"(data"+itoa(i);
+		for(auto jt = this->grouping_attr->begin(); jt != this->grouping_attr->end(); jt++){
+			out += ",(*it)->"+*jt;
+		}
+		out += ");\n";
+		for(auto it = xt->begin(); it != xt->end(); it++){
+			string type = "struct group"+itoa((*it)->group);
+			string name = "data"+itoa((*it)->group);
+			string field = (*it)->toVar();
+			string var = "(*xt)";
+			if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
+				out += "\t\t\t"+name+"->at(pos)->"+field + ".add("+var+"->" + (*it)->column + ");\n";
+			}else if((*it)->func.compare("sum") == 0 || (*it)->func.compare("SUM") == 0){
+				out += "\t\t\t"+name+"->at(pos)->"+field + " += "+var+"->" + (*it)->column + ";\n";
+			}else if((*it)->func.compare("count") == 0 || (*it)->func.compare("COUNT") == 0){
+				out += "\t\t\t"+name+"->at(pos)->"+field + " += 1;\n";
+			}else if((*it)->func.compare("min") == 0|| (*it)->func.compare("MIN") == 0){
+				
+				out += "\t\t\tif("+name+"->at(pos)->"+field+"> "+var+"->"+(*it)->column + "){\n";
+				out += "\t\t\t\t"+name+"->at(pos)->"+field + " = "+var+"->" +(*it)->column + ";\n";
+				out += "\t\t\t}\n"; 
+			}else if((*it)->func.compare("max") == 0|| (*it)->func.compare("MAX") == 0){
+				out += "\t\t\tif("+name+"->at(pos)->"+field+"< "+var+"->"+(*it)->column + "){\n";
+				out += "\t\t\t\t"+name+"->at(pos)->"+field + " = "+var+"->" +(*it)->column + ";\n";
+				out += "\t\t\t}\n"; 
+			}
+		}
+		out += "\t\t}\n"
+			   "\t}\n";
+		i++;
+	}	
+	return out;
+}
+
+
 string Scan_Generator::fill_mfstruct(){
 	string out = "\tfor(auto it = mf_struct->begin();it != mf_struct->end(); it++){\n";
 	string vfind_arg;
@@ -169,8 +217,8 @@ string Scan_Generator::fill_mfstruct(){
 			   "\t\t}else{\n"
 			   "\t\t\tmf_struct->erase(it);\n"
 			   "\t\t\tit--;\n"
-			   "\t\t\tcontinue;\n";
-		out += "\t\t}\n";
+			   "\t\t\tcontinue;\n"
+			   "\t\t}\n";
 	}
 	out += "\t}\n";
 	return out;

@@ -16,12 +16,12 @@ using namespace std;
 /**
  * Handle input from the command 
  */
-void parse_user_input();
+void parse_user_input(bool emf);
 
 /**
  * Parses input from a file
  * @param file The file to parse
  */
-void parse_file_input(string file);
+void parse_file_input(string file,bool emf);
 
 #endif

@@ -16,6 +16,7 @@ Condition::Condition(string cond){
 	int index = strpos_m(tmp,3,string("="),string("<"),string(">") );
 	this->column = tmp.substr(0,index);
 	if(index == -1){
+		cout<<"Given the condition of "<<cond<<endl;
 		throw "Error, invalid Condition";
 	}else if(index == strpos_m(tmp,2,string("<="),string(">="))){
 		this->exp = tmp.substr(index,2);
@@ -28,10 +29,22 @@ Condition::Condition(string cond){
 }
 
 
-string Condition::toCpp(string var,vector<string>* select_columns){
+string Condition::toCpp(string var,string var2,vector<string>* select_columns,vector<Column*>* columns){
 	string out; 
-	
-	if(Aggregate::isAggregate(this->value)){
+	if(Column::isColumn(this->value,columns)){
+		string value = var2 + "->" + this->value;
+		out = var + "->" +this->column;
+		if(this->column.find("avg")!= string::npos){
+			out+= ".value()";
+		}
+		if(this->value.find("\"") != string::npos){
+			out += ".compare("+value+") == 0";
+		}else if(this->exp.compare("=") != 0){
+			out += " "+this->exp+" "+value;
+		}else{
+			out += " == " + value;
+		}
+	}else if(Aggregate::isAggregate(this->value)){
 		Aggregate tmp = Aggregate(this->value);
 		string vfind_arg;
 		for(auto jt = select_columns->begin(); jt != select_columns->end(); jt++){
@@ -46,14 +59,12 @@ string Condition::toCpp(string var,vector<string>* select_columns){
 		string val = "data"+itoa(tmp.group)+"->at("+pos+")->"+tmp.toVar();
 		out += var + "->" +this->column;
 
-		if(this->column.find("avg")!= string::npos){
+		if(this->column.find("avg") != string::npos){
 			out+= ".value()";
 		}
-
 		if(this->value.find("avg") != string::npos){
 			val += ".value()";
 		}
-
 		if(this->value.find("\"") != string::npos){
 			out += ".compare("+val+") == 0";
 		}else if(this->exp.compare("=") != 0){

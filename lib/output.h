@@ -38,7 +38,7 @@ vector<Aggregate*>* getSelectAggregates(vector<string>* select_attribute,vector<
 /**
  * Processes the query and outputs the program which executes the query
  */
-void parse_query(vector<string>*, int, vector<string>*, vector<string>*, vector<string>*,string);
+void parse_query(vector<string>*,string, int, vector<string>*, vector<string>*, vector<string>*,string,bool);
 
 
 #ifndef OUTPUT_FILE

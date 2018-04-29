@@ -10,15 +10,14 @@ Conditions::Conditions(string conds){
 		this->conditions->push_back(new Condition(conds));
 	}else{
 		vector<string>* args = c_explode(' ',conds);
-		for(int i = 0;i<args->size();i++){
-			if(i%2 == 0){
+		for(int i = 0;i < args->size();i++){
+			if(i % 2 == 0){
 				this->conditions->push_back(new Condition(args->at(i)));
 			}else{
 				this->ops->push_back(args->at(i));
 			}
 		}
 	}
-	
 }
 
 Conditions::~Conditions(){
@@ -26,10 +25,10 @@ Conditions::~Conditions(){
 	delete this->ops;
 }
 		
-string Conditions::toCpp(string var,vector<string>* select_columns){
-	string out = this->conditions->at(0)->toCpp(var,select_columns);
+string Conditions::toCpp(string var,string var2,vector<string>* select_columns,vector<Column*>* columns){
+	string out = this->conditions->at(0)->toCpp(var,var2,select_columns,columns);
 	for(int i = 1;i<this->conditions->size();i++){
-		out += " " + this->ops->at(i - 1) + " " + this->conditions->at(i)->toCpp(var,select_columns);
+		out += " " + this->ops->at(i - 1) + " " + this->conditions->at(i)->toCpp(var,var2,select_columns,columns);
 	}
 	return out;
 }

@@ -37,8 +37,8 @@ vector<Aggregate*>* getSelectAggregates(vector<string>* select_attribute,vector<
 }
 
 
-void parse_query(vector<string>* select_attribute,int no_grouping_vars,
-				 vector<string>* grouping_attr,vector<string>* f_vect,vector<string>* select_cond_vect,string having){
+void parse_query(vector<string>* select_attribute,string where,int no_grouping_vars,
+				 vector<string>* grouping_attr,vector<string>* f_vect,vector<string>* select_cond_vect,string having,bool emf){
 	
 	string header = OUTPUT_FILE_HEADER_START;
 
@@ -63,8 +63,8 @@ void parse_query(vector<string>* select_attribute,int no_grouping_vars,
 		"\tsql::ResultSet* res;\n"
 		"\tvector<struct mf_structure*>* mf_struct = new vector<struct mf_structure*>();\n";
 
-	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr);
-	Scan_Generator* gen = new Scan_Generator(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having,grouping_attr);
+	program += data_retrieval(no_grouping_vars,columns,select_columns,select_cond_vect,all_aggregates,grouping_attr,where);
+	Scan_Generator* gen = new Scan_Generator(no_grouping_vars,columns,select_columns,select_aggregates,all_aggregates,select_conditions,having,grouping_attr,emf);
 	program += gen->generate();
 	program += "\tprint_mf_structure(mf_struct);\n";
 	program += "\treturn 0;\n"

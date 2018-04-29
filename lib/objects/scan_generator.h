@@ -21,6 +21,7 @@ class Scan_Generator{
 		vector<Conditions*>* select_conditions;
 		string having;
 		vector<string>* grouping_attr;
+		bool emf;
 	public:
 		/**
 		 * Generates all 3 scans
@@ -34,7 +35,7 @@ class Scan_Generator{
 		 * @return                   All 3 scans used for processing
 		 */
 		Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
-				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr);
+				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr,bool emf);
 		string generate();
 	private:
 		/**
@@ -58,9 +59,11 @@ class Scan_Generator{
 
 		/**
 		 * processes all the aggregates
-		 * @return                   The second scan
+		 * @return     The second scan
 		 */
 		string aggregate_scan();
+
+		string emf_aggregate_scan();
 
 		string fill_mfstruct();
 

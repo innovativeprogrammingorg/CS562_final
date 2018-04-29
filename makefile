@@ -45,8 +45,12 @@ fclean:
 re: fclean all
 
 test: re
-	./final "./test"
+	./final "./test/test"
 	make output
+	./result
+	./final -emf "./test/emftest"
+	make output 
+	./result
 
 sample:
 	$(CC) -g test.cpp -o test $(CFLAGS) 
