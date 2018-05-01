@@ -1,0 +1,15 @@
+In order for this program to run, please make sure that you have all of the listed dependencies installed.
+If you are using a debian based OS, which uses apt, you can do this easily via the commands
+`sudo apt-get update`
+`sudo apt-get install libboost-all-dev mysql-client openssl cmake -y`
+
+Once that is out of the way, set up the mysql connector by opening a terminal, 
+and cd into the folder named mysqlconnector, then following the instructions at
+https://dev.mysql.com/doc/connector-cpp/en/connector-cpp-installation-source-unix.html
+
+Once that is completed, the last part of the configuration which is needed is modifying the config.h header, 
+replace the dummy information inside that header with the actual information, and configuration is complete!
+
+cd into the main directory of this project, (it has the makefile in it), and then run `make` to compile it
+
+You can optionally run `make generate` if you wish to use the program which randomly generates entries for the table

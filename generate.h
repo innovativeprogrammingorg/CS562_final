@@ -5,11 +5,8 @@
 #include <string>
 #include <cstring>
 #include "lib/objects/sql.h"
+#include "lib/config.h"
 using namespace std;
 
-
-#ifndef DATABASE
-#define DATABASE "CS562"
-#endif
 
 #endif

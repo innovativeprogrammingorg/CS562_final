@@ -1,20 +1,18 @@
 #include "sql.h"
 using namespace std;
 
-string SQLConn::location = "tcp://127.0.0.1:3306";
-string SQLConn::user = "root";
-string SQLConn::password = "password";
+
 sql::Driver* SQLConn::driver = get_driver_instance();
 
 SQLConn::SQLConn(){
-	this->conn = SQLConn::driver->connect(SQLConn::location,SQLConn::user,SQLConn::password);
+	this->conn = SQLConn::driver->connect(MYSQL_LOCATION,MYSQL_USERNAME,MYSQL_PASSWORD);
 }
 
 SQLConn::SQLConn(string database){
 	if(SQLConn::driver == nullptr || SQLConn::driver == NULL){
 		SQLConn::driver = get_driver_instance();
 	}
-	this->conn = SQLConn::driver->connect(SQLConn::location,SQLConn::user,SQLConn::password);
+	this->conn = SQLConn::driver->connect(MYSQL_LOCATION,MYSQL_USERNAME,MYSQL_PASSWORD);
 	this->update_database(database);
 }
 

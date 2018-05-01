@@ -15,6 +15,7 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
+#include "../config.h"
 
 /**
  * double 'd'
@@ -30,8 +31,6 @@ class SQLConn{
 	private:
 		static sql::Driver* driver;
 	  	static string user;
-	  	static string password;
-	  	static string location;
 	public:
 		string database;
 		sql::Connection* conn;

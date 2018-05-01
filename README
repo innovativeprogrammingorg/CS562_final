@@ -1,0 +1,20 @@
+Please read the INSTALL file included in order to get this program working!
+
+*********Documentation**************
+
+./final [-emf] [file_input]
+
+Absence of a file will result in the program asking for you to enter the components of the query,
+which would otherwise be given to it from the file. Upon success, it will create the files
+result.cpp and result.h These can then be compiled by entering 'make output', and then run 
+as './result'
+
+-emf This flag indicates to the program that it will be given an EMF query, without
+	 this flag, it will treat it as either a normal query or a MF query
+
+[file_input] The directory, absolute or relative, of the file input for the program
+
+
+./generate [entries]
+Will generate [entries] entries when run into the table defined in config.h. If not given any parameters,
+it will generate a default of 3000 entries
