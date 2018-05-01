@@ -100,5 +100,4 @@ class Column{
 		static int getType(string type);	
 };
 
-
 #endif

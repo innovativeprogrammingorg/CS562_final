@@ -1,8 +1,6 @@
 #include "scan_generator.h"
 using namespace std;
 
-
-
 Scan_Generator::Scan_Generator(int no_grouping_vars,vector<Column*>* columns,vector<string>* select_columns,vector<Aggregate*>* select_aggregates,
 				    vector<Aggregate*>* all_aggregates,vector<Conditions*>* select_conditions,string having,vector<string>* grouping_attr,bool emf){
 	this->no_grouping_vars = no_grouping_vars;
@@ -151,14 +149,10 @@ string Scan_Generator::emf_aggregate_scan(){
 	int i = 0;
 	for(auto xt = groups.begin(); xt !=  groups.end(); xt++){
 		out += "\tfor(auto it = uniques->begin();it != uniques->end();it++)\n";
-		out += "\tfor(auto xt = data->begin(); xt != data->end();xt++){\n"
+		out += "\t\tfor(auto xt = data->begin(); xt != data->end();xt++){\n"
 			   "\t\tsize_t pos;\n";
 		out += "\t\tif(" + this->get_selection_cond(i) + "){\n";
-		out += "\t\t\tpos = vfind"+itoa(i)+"(data"+itoa(i);
-		for(auto jt = this->grouping_attr->begin(); jt != this->grouping_attr->end(); jt++){
-			out += ",(*it)->"+*jt;
-		}
-		out += ");\n";
+		out += "\t\t\tpos = it - uniques->begin();\n";
 		for(auto it = xt->begin(); it != xt->end(); it++){
 			string type = "struct group"+itoa((*it)->group);
 			string name = "data"+itoa((*it)->group);

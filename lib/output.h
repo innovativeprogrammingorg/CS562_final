@@ -11,7 +11,7 @@
 #include "objects/sql.h"
 #include "structures.h"
 #include "query.h"
-#include "scan.h"
+#include "helpers.h"
 #include "config.h"
 #include "objects/conditions.h"
 #include "objects/column.h"

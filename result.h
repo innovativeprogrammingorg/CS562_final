@@ -9,8 +9,8 @@
 #include "lib/objects/average.h"
 #include "lib/objects/sql.h"
 struct mf_structure {
+	string cust;
 	string prod;
-	int64_t month;
 	int64_t avg_quant_1;
 	int64_t avg_quant_2;
 };
@@ -24,17 +24,17 @@ struct sales{
 	int64_t quant;
 };
 struct group0{
+	string cust;
 	string prod;
-	int64_t month;
 };
 struct group1{
+	string cust;
 	string prod;
-	int64_t month;
 	Average<int64_t> avg_quant;
 };
 struct group2{
+	string cust;
 	string prod;
-	int64_t month;
 	Average<int64_t> avg_quant;
 };
 #endif

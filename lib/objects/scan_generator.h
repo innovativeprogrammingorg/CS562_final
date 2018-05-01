@@ -97,6 +97,4 @@ class Scan_Generator{
 
 };
 
-
-
 #endif

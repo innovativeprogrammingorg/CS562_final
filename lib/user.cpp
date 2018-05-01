@@ -81,42 +81,42 @@ void parse_file_input(string file,bool emf){
 	int64_t index7 = data.find(parts[6]);
 
 	s = data.substr(index1+parts[0].length()+1,index2 - (index1+parts[0].length() + 2));
-	cout<<"S: "<<s<<endl;
+	//cout<<"S: "<<s<<endl;
 
 	where = data.substr(index2+parts[1].length()+1,index3 - (index2+parts[1].length() + 2));
-	cout<<"W:"<<where<<endl;
+	//cout<<"W:"<<where<<endl;
 
 	no_grouping_vars = atoi(trim(data.substr(index3+parts[2].length(),index4 - (index3+parts[2].length()))).c_str());
-	cout<<"No. of Grouping Variables: "<<no_grouping_vars<<endl;
+	//cout<<"No. of Grouping Variables: "<<no_grouping_vars<<endl;
 
 	v = data.substr(index4+parts[3].length()+1,index5 - (index4+parts[3].length() + 2));
-	cout<<"V: "<<v<<endl;
+	//cout<<"V: "<<v<<endl;
 
 	f = data.substr(index5+parts[4].length()+1,index6 - (index5+parts[4].length() + 2));
-	cout<<"F: "<<f<<endl;
+	//cout<<"F: "<<f<<endl;
 
 	if(no_grouping_vars>0){
 		svc = data.substr(index6+parts[5].length()+1,index7 - (index6+parts[5].length() + 2));
 	}else{
 		svc = "";
 	}
-	cout<<"SVC: "<<svc<<endl;
+	//cout<<"SVC: "<<svc<<endl;
 	
 	having = data.substr(index7+parts[6].length()+1);
-	cout<<"Having: "<<having<<endl;
+	//cout<<"Having: "<<having<<endl;
 
 	select_attribute = explode(", ",s);
 	grouping_attr = explode(", ",v);
 	f_vect = explode(", ",f);
-	cout<<"++++++AFTER PARSING++++++++"<<endl;
+	//cout<<"++++++AFTER PARSING++++++++"<<endl;
 	select_cond_vect = explode("\n",svc);
-	cout<<parts[0]<<endl;
+	/*cout<<parts[0]<<endl;
 	print_vector(select_attribute);
 	cout<<parts[3]<<endl;
 	print_vector(grouping_attr);
 	cout<<parts[4]<<endl;
 	print_vector(f_vect);
 	cout<<parts[5]<<endl;
-	print_vector(select_cond_vect);
+	print_vector(select_cond_vect);*/
 	parse_query(select_attribute,where,no_grouping_vars,grouping_attr,f_vect,select_cond_vect,having,emf);
 }

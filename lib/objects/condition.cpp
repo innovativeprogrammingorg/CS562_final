@@ -13,13 +13,16 @@ Condition::Condition(string cond){
 	}else{
 		this->group = 0;
 	}
-	int index = strpos_m(tmp,3,string("="),string("<"),string(">") );
+	int index = strpos_m(tmp,4,string("="),string("<"),string(">"),string("!"));
 	this->column = tmp.substr(0,index);
 	if(index == -1){
 		cout<<"Given the condition of "<<cond<<endl;
 		throw "Error, invalid Condition";
-	}else if(index == strpos_m(tmp,2,string("<="),string(">="))){
+	}else if( (index == strpos_m(tmp,4,string("<="),string(">="),string("!="),string("<>"))) != 0){
 		this->exp = tmp.substr(index,2);
+		if(this->exp.compare("<>") == 0){
+			this->exp = "!=";
+		}
 		tmp = tmp.substr(index+2);
 	}else{
 		this->exp = tmp.substr(index,1);

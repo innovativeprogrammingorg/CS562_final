@@ -7,7 +7,6 @@
 #include "column.h"
 #include "condition.h"
 
-
 using namespace std;
 
 class Conditions{

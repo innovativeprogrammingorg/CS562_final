@@ -1,0 +1,15 @@
+SELECT ATTRIBUTE(S):
+prod, quant
+WHERE(W):
+year = 1997
+NUMBER OF GROUPING VARIABLES(n):
+2
+GROUPING ATTRIBUTES(V):
+prod, quant
+F-VECT([F]):
+2_count_prod, 1_count_prod
+SELECT CONDITION-VECT([σ]):
+1.prod=prod
+2.prod=prod and 2.quant<quant
+HAVING_CONDITION(G):
+2_count_prod = 1_count_prod / 2
