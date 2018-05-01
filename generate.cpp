@@ -8,7 +8,7 @@ int main(int argc,char** argv){
 		entries = atoi(argv[1]);
 	}
 	
-	string stmt = "INSERT INTO `test` (cust,prod,day,month,year,state,quant) VALUES (?,?,?,?,?,?,?)";
+	string stmt = "INSERT INTO `test2` (cust,prod,day,month,year,state,quant) VALUES (?,?,?,?,?,?,?)";
 	SQLConn* conn = new SQLConn(DATABASE);
 	string customers[424] = {"JAMES","JOHN","ROBERT","MICHAEL","WILLIAM","DAVID","RICHARD","CHARLES","JOSEPH","THOMAS","CHRISTOPHER","DANIEL","PAUL",
 		"MARK","DONALD","GEORGE","KENNETH","STEVEN","EDWARD","BRIAN","RONALD","ANTHONY","KEVIN","JASON","MATTHEW","GARY","TIMOTHY","JOSE","LARRY",

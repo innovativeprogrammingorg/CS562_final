@@ -37,6 +37,14 @@ clean:
 
 fclean:
 	rm -f final result
+
+purge: fclean
+	make clean
+	rm -f result.cpp result.h generate
+
+zip: purge
+	zip out.zip -r ./*
+
 	
 re: fclean all
 

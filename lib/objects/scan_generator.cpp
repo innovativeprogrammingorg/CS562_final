@@ -41,7 +41,7 @@ string Scan_Generator::parse_having(){
 		}
 		if(Aggregate::isAggregate(*it)){
 			Aggregate* tmp = new Aggregate(*it);
-			out += "data" + itoa(tmp->group) + "->at(pos"+itoa(tmp->group)+")->"+tmp->toVar();
+			out += "data" + itoa(tmp->group) + "->at(pos)->"+tmp->toVar();
 			if(tmp->func.compare("avg") == 0 || tmp->func.compare("AVG") == 0){
 				out += ".value()";
 			}
@@ -149,10 +149,9 @@ string Scan_Generator::emf_aggregate_scan(){
 	int i = 0;
 	for(auto xt = groups.begin(); xt !=  groups.end(); xt++){
 		out += "\tfor(auto it = uniques->begin();it != uniques->end();it++)\n";
-		out += "\t\tfor(auto xt = data->begin(); xt != data->end();xt++){\n"
-			   "\t\tsize_t pos;\n";
+		out += "\t\tfor(auto xt = data->begin(); xt != data->end();xt++){\n";
 		out += "\t\tif(" + this->get_selection_cond(i) + "){\n";
-		out += "\t\t\tpos = it - uniques->begin();\n";
+		out += "\t\t\tsize_t pos = it - uniques->begin();\n";
 		for(auto it = xt->begin(); it != xt->end(); it++){
 			string type = "struct group"+itoa((*it)->group);
 			string name = "data"+itoa((*it)->group);
@@ -189,30 +188,27 @@ string Scan_Generator::fill_mfstruct(){
 	for(auto jt = this->grouping_attr->begin(); jt != this->grouping_attr->end(); jt++){
 		vfind_arg += ",(*it)->"+*jt;
 	}
-	for(int i = 0; i <= this->no_grouping_vars; i++){
-		out += "\t\tint pos" + itoa(i) + " = vfind"+itoa(i)+"(data"+itoa(i)+vfind_arg+");\n";
-	}
+	out += "\t\tint pos = vfind0(data0"+vfind_arg+");\n";
 	out += "\t\tif(!("+this->parse_having()+")";
 
 	out += "){\n"
 	 	   "\t\t\tmf_struct->erase(it);\n"
 		   "\t\t\tit--;\n"
 		   "\t\t\tcontinue;\n"
-	       "\t\t}\n";
+	       "\t\t}\n"
+	       "\t\tif(pos == -1){\n"
+	       "\t\t\tmf_struct->erase(it);\n"
+		   "\t\t\tit--;\n"
+		   "\t\t\tcontinue;\n"
+		   "\t\t}\n";
 	for(auto it = this->select_aggregates->begin();it != this->select_aggregates->end();it++){
 		string group = itoa((*it)->group);
 		
-		out += "\t\tif(pos"+itoa((*it)->group)+" != -1){\n";
-		out += "\t\t\t(*it)->"+(*it)->toABSVar() +" = data"+group+"->at(pos"+itoa((*it)->group)+")->"+(*it)->toVar();
+		out += "\t\t(*it)->"+(*it)->toABSVar() +" = data"+group+"->at(pos)->"+(*it)->toVar();
 		if((*it)->func.compare("avg") == 0 || (*it)->func.compare("AVG") == 0){
 			out += ".value()";
 		}
-		out += ";\n"
-			   "\t\t}else{\n"
-			   "\t\t\tmf_struct->erase(it);\n"
-			   "\t\t\tit--;\n"
-			   "\t\t\tcontinue;\n"
-			   "\t\t}\n";
+		out += ";\n";
 	}
 	out += "\t}\n";
 	return out;
