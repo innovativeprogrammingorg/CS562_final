@@ -84,6 +84,8 @@ class Column{
 		 * @return         Whether the column exists in the table
 		 */
 		static bool isColumn(string col,vector<Column*>* columns);
+
+		static bool hasColumn(string str, vector<Column*>* columns);
 	private:
 		/**
 		 * Gets the CPPType from the SQL type

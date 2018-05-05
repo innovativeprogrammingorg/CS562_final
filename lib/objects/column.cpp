@@ -72,6 +72,15 @@ bool Column::isColumn(string col,vector<Column*>* columns){
 	return false;
 }
 
+bool Column::hasColumn(string col,vector<Column*>* columns){
+	for(auto it = columns->begin(); it != columns->end();it++){
+		if(col.find((*it)->name) != string::npos){
+			return true;
+		}
+	}
+	return false;
+}
+
 
 int Column::getCppType(int type){
 	switch(type){

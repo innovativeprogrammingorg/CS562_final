@@ -3,8 +3,6 @@ CC= g++
 INCLUDE = -Ilib/
 VERSION = c++14
 CFLAGS = -std=$(VERSION)
-#SQL_FLAGS = -I./mysqlconnector/Linux/mysqlcppconn/include/jdbc/ -I/mysqlconnector/Linux/mysqlcppconn/include/jdbc/cppconn -Wl,-rpath=./mysqlconnector/Linux/mysqlcppconn/lib64/
-#LINK_FLAGS = -lmysqlcppconn -l./mysqlconnector/Linux/mysqlcppconn/lib64/libmysqlcppconn.so
 SQL_FLAGS = -I/usr/local/include -I/usr/local/include/cppconn -Wl,-Bdynamic 
 LINK_FLAGS = -lmysqlcppconn
 CFLAGS += $(SQL_FLAGS)
@@ -66,6 +64,10 @@ test: re
 	./result
 	rm -f result
 	./final -emf "./test/example3"
+	make output 
+	./result
+	rm -f result
+	./final -emf "./test/example4"
 	make output 
 	./result
 	rm -f result

@@ -76,6 +76,19 @@ string Condition::toCpp(string var,string var2,vector<string>* select_columns,ve
 			out += " == " + val;
 		}
 		out += ")";
+	}else if(Column::hasColumn(this->value,columns)){
+		string value = var2 + "->" + this->value;
+		out = var + "->" +this->column;
+		if(this->column.find("avg")!= string::npos){
+			out+= ".value()";
+		}
+		if(this->value.find("\"") != string::npos){
+			out += ".compare("+value+") == 0";
+		}else if(this->exp.compare("=") != 0){
+			out += " "+this->exp+" "+value;
+		}else{
+			out += " == " + value;
+		}	
 	}else{
 		out = var + "->" +this->column;
 		if(this->column.find("avg")!= string::npos){
